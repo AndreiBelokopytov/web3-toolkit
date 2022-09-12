@@ -13,7 +13,7 @@ export const Address = React.memo(
     const formattedAddress = useMemo(
       () =>
         shortened ? shortenAddress(address, shortenedSubstrLength) : address,
-      [address]
+      [address, shortened, shortenedSubstrLength]
     );
     return <span>{formattedAddress}</span>;
   }
