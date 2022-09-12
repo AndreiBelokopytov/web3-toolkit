@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { useMetaMask } from './useMetaMask';
 import MetaMaskOnboarding from '@metamask/onboarding';
+import { MetaMaskOnboardingStatus as OnboardingStatus } from './MetaMaskOnboardingStatus';
 
 const ETH_ADDRESS = '0x965B7A773e3632b259108d246A7Cfdcdff118999';
 
@@ -40,14 +41,18 @@ describe('useMetaMask', () => {
     //@ts-ignore
     MetaMaskOnboarding.isMetaMaskInstalled.mockReturnValue(false);
     render(<MetaMaskButton />);
-    expect(screen.getByRole('button')).toHaveTextContent('notInstalled');
+    expect(screen.getByRole('button')).toHaveTextContent(
+      OnboardingStatus.notInstalled
+    );
   });
 
   it('has "notConnected" state if MetaMask is installed', () => {
     //@ts-ignore
     MetaMaskOnboarding.isMetaMaskInstalled.mockReturnValue(true);
     render(<MetaMaskButton />);
-    expect(screen.getByRole('button')).toHaveTextContent('notConnected');
+    expect(screen.getByRole('button')).toHaveTextContent(
+      OnboardingStatus.notConnected
+    );
   });
 
   it('has "connecting" state when button clicked if MetaMask is installed', async () => {
@@ -55,7 +60,9 @@ describe('useMetaMask', () => {
     MetaMaskOnboarding.isMetaMaskInstalled.mockReturnValue(true);
     render(<MetaMaskButton />);
     await fireEvent.click(screen.getByRole('button'));
-    expect(screen.getByRole('button')).toHaveTextContent('connecting');
+    expect(screen.getByRole('button')).toHaveTextContent(
+      OnboardingStatus.connecting
+    );
   });
 
   it('has "onboarding" state when button clicked if MetaMask is not installed', async () => {
@@ -64,7 +71,9 @@ describe('useMetaMask', () => {
     render(<MetaMaskButton />);
     fireEvent.click(screen.getByRole('button'));
     await waitFor(() => {
-      expect(screen.getByRole('button')).toHaveTextContent('onboarding');
+      expect(screen.getByRole('button')).toHaveTextContent(
+        OnboardingStatus.onboarding
+      );
     });
   });
 
@@ -74,7 +83,9 @@ describe('useMetaMask', () => {
     render(<MetaMaskButton />);
     fireEvent.click(screen.getByRole('button'));
     await waitFor(() => {
-      expect(screen.getByRole('button')).toHaveTextContent('connected');
+      expect(screen.getByRole('button')).toHaveTextContent(
+        OnboardingStatus.connected
+      );
       expect(screen.getByText(ETH_ADDRESS)).toBeInTheDocument();
     });
   });

@@ -1,6 +1,7 @@
-export type MetaMaskOnboardingStatus =
-  | 'notInstalled'
-  | 'notConnected'
-  | 'onboarding'
-  | 'connecting'
-  | 'connected';
+export enum MetaMaskOnboardingStatus {
+  notInstalled = 'notInstalled',
+  notConnected = 'notConnected',
+  onboarding = 'onboarding',
+  connecting = 'connecting',
+  connected = 'connected'
+}

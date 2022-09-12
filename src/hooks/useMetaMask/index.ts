@@ -1,2 +1,2 @@
 export * from './useMetaMask';
-export * from './MetaMaskOnBoardingStatus';
+export * from './MetaMaskOnboardingStatus';

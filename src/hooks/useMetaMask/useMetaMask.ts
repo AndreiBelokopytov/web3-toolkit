@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { MetaMaskOnboardingStatus } from './MetaMaskOnboardingStatus';
+import { MetaMaskOnboardingStatus as OnboardingStatus } from './MetaMaskOnboardingStatus';
 import MetaMaskOnboarding from '@metamask/onboarding';
 import { ethereum } from '../../providers/ethereum';
 
 type MetaMaskOnboardingState = {
-  status: MetaMaskOnboardingStatus;
+  status: OnboardingStatus;
   accounts: string[];
 };
 
@@ -17,8 +17,8 @@ export function useMetaMask(): MetaMaskAdapter {
   const metaMaskOnboarding = useRef<MetaMaskOnboarding>();
 
   const initialStatus = MetaMaskOnboarding.isMetaMaskInstalled()
-    ? 'notConnected'
-    : 'notInstalled';
+    ? OnboardingStatus.notConnected
+    : OnboardingStatus.notInstalled;
   const [onboardingState, setOnboardingState] =
     useState<MetaMaskOnboardingState>({
       status: initialStatus,
@@ -27,7 +27,7 @@ export function useMetaMask(): MetaMaskAdapter {
 
   const handleAccountsChanded = useCallback((accounts: string[]) => {
     setOnboardingState({
-      status: 'connected',
+      status: OnboardingStatus.connected,
       accounts
     });
     metaMaskOnboarding.current?.stopOnboarding();
@@ -41,10 +41,10 @@ export function useMetaMask(): MetaMaskAdapter {
     };
   }, [handleAccountsChanded]);
 
-  const connect = () => {
+  const connect = useCallback(() => {
     if (MetaMaskOnboarding.isMetaMaskInstalled()) {
       setOnboardingState({
-        status: 'connecting',
+        status: OnboardingStatus.connecting,
         accounts: []
       });
       ethereum
@@ -54,12 +54,12 @@ export function useMetaMask(): MetaMaskAdapter {
         .then(handleAccountsChanded);
     } else {
       setOnboardingState({
-        status: 'onboarding',
+        status: OnboardingStatus.onboarding,
         accounts: []
       });
       metaMaskOnboarding.current?.startOnboarding();
     }
-  };
+  }, [handleAccountsChanded]);
 
   return { onboardingState, connect };
 }
