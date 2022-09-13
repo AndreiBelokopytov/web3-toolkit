@@ -11,7 +11,9 @@ jest.mock('../../providers/ethereum', () => {
   return {
     ethereum: {
       request() {
-        return Promise.resolve([ETH_ADDRESS]);
+        return new Promise((resolve) =>
+          setTimeout(() => resolve([ETH_ADDRESS]), 200)
+        );
       },
       on() {},
       removeListener() {}
@@ -60,9 +62,11 @@ describe('useMetaMask', () => {
     MetaMaskOnboarding.isMetaMaskInstalled.mockReturnValue(true);
     render(<MetaMaskButton />);
     await fireEvent.click(screen.getByRole('button'));
-    expect(screen.getByRole('button')).toHaveTextContent(
-      OnboardingStatus.connecting
-    );
+    await waitFor(() => {
+      expect(screen.getByRole('button')).toHaveTextContent(
+        OnboardingStatus.connecting
+      );
+    });
   });
 
   it('has "onboarding" state when button clicked if MetaMask is not installed', async () => {
