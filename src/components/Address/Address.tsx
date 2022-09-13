@@ -1,21 +1,15 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 
 const DEFAULT_SUBSTRING_LENGTH = 6;
 
 type Props = {
-  address: string;
-  shortened?: boolean;
-  shortenedSubstrLength?: number;
+  children: string;
+  substrLength?: number;
 };
 
 export const Address = React.memo(
-  ({ address, shortened, shortenedSubstrLength }: Props) => {
-    const formattedAddress = useMemo(
-      () =>
-        shortened ? shortenAddress(address, shortenedSubstrLength) : address,
-      [address, shortened, shortenedSubstrLength]
-    );
-    return <span>{formattedAddress}</span>;
+  ({ children: address, substrLength }: Props) => {
+    return <span>{shortenAddress(address, substrLength)}</span>;
   }
 );
 
