@@ -34,7 +34,7 @@ function shortenAddress(address, substrLength) {
 var ethereum = window.ethereum;
 
 function useMetaMask() {
-  var metaMaskOnboarding = React.useRef();
+  var metaMaskOnboarding = React.useRef(new MetaMaskOnboarding());
   var initialStatus = MetaMaskOnboarding.isMetaMaskInstalled() ? exports.MetaMaskOnboardingStatus.notConnected : exports.MetaMaskOnboardingStatus.notInstalled;
 
   var _useState = React.useState({
@@ -54,10 +54,14 @@ function useMetaMask() {
     (_metaMaskOnboarding$c = metaMaskOnboarding.current) === null || _metaMaskOnboarding$c === void 0 ? void 0 : _metaMaskOnboarding$c.stopOnboarding();
   }, []);
   React.useEffect(function () {
-    metaMaskOnboarding.current = new MetaMaskOnboarding();
-    ethereum.on('accountsChanged', handleAccountsChanded);
+    if (MetaMaskOnboarding.isMetaMaskInstalled()) {
+      ethereum.on('accountsChanged', handleAccountsChanded);
+    }
+
     return function () {
-      ethereum.removeListener('accountsChanged', handleAccountsChanded);
+      if (MetaMaskOnboarding.isMetaMaskInstalled()) {
+        ethereum.removeListener('accountsChanged', handleAccountsChanded);
+      }
     };
   }, [handleAccountsChanded]);
   var connect = React.useCallback(function () {

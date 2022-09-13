@@ -33,7 +33,7 @@ var MetaMaskOnboardingStatus;
 var ethereum = window.ethereum;
 
 function useMetaMask() {
-  var metaMaskOnboarding = useRef();
+  var metaMaskOnboarding = useRef(new MetaMaskOnboarding());
   var initialStatus = MetaMaskOnboarding.isMetaMaskInstalled() ? MetaMaskOnboardingStatus.notConnected : MetaMaskOnboardingStatus.notInstalled;
 
   var _useState = useState({
@@ -53,10 +53,14 @@ function useMetaMask() {
     (_metaMaskOnboarding$c = metaMaskOnboarding.current) === null || _metaMaskOnboarding$c === void 0 ? void 0 : _metaMaskOnboarding$c.stopOnboarding();
   }, []);
   useEffect(function () {
-    metaMaskOnboarding.current = new MetaMaskOnboarding();
-    ethereum.on('accountsChanged', handleAccountsChanded);
+    if (MetaMaskOnboarding.isMetaMaskInstalled()) {
+      ethereum.on('accountsChanged', handleAccountsChanded);
+    }
+
     return function () {
-      ethereum.removeListener('accountsChanged', handleAccountsChanded);
+      if (MetaMaskOnboarding.isMetaMaskInstalled()) {
+        ethereum.removeListener('accountsChanged', handleAccountsChanded);
+      }
     };
   }, [handleAccountsChanded]);
   var connect = useCallback(function () {
