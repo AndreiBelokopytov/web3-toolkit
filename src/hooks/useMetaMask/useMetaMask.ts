@@ -14,7 +14,9 @@ type MetaMaskAdapter = {
 };
 
 export function useMetaMask(): MetaMaskAdapter {
-  const metaMaskOnboarding = useRef<MetaMaskOnboarding>();
+  const metaMaskOnboarding = useRef<MetaMaskOnboarding>(
+    new MetaMaskOnboarding()
+  );
 
   const initialStatus = MetaMaskOnboarding.isMetaMaskInstalled()
     ? OnboardingStatus.notConnected
@@ -34,10 +36,14 @@ export function useMetaMask(): MetaMaskAdapter {
   }, []);
 
   useEffect(() => {
-    metaMaskOnboarding.current = new MetaMaskOnboarding();
-    ethereum.on('accountsChanged', handleAccountsChanded);
+    if (MetaMaskOnboarding.isMetaMaskInstalled()) {
+      ethereum.on('accountsChanged', handleAccountsChanded);
+    }
+
     return () => {
-      ethereum.removeListener('accountsChanged', handleAccountsChanded);
+      if (MetaMaskOnboarding.isMetaMaskInstalled()) {
+        ethereum.removeListener('accountsChanged', handleAccountsChanded);
+      }
     };
   }, [handleAccountsChanded]);
 
