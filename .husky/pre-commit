@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+export $(cat .env | xargs)
 yarn test:unit
 yarn test:lint
 yarn test:build
