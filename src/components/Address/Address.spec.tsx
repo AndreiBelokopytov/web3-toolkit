@@ -6,7 +6,7 @@ const ETH_ADDRESS = '0x965B7A773e3632b259108d246A7Cfdcdff118999';
 const ETH_SHORT_ADDRESS = '0x965B...118999';
 
 describe('Address', () => {
-  it('renders shortend address', () => {
+  it('renders shorten address', () => {
     render(<Address>{ETH_ADDRESS}</Address>);
     expect(screen.getByText(/.+\.{3}.+/)).toBeInTheDocument();
   });
