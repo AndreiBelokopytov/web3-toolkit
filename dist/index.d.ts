@@ -1,3 +1,3 @@
-export * from './components/Address';
-export * from './hooks/useMetaMask';
-export * from './providers/ethereum';
+export * from './components';
+export * from './hooks';
+export * from './providers';
