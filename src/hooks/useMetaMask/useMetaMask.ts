@@ -8,8 +8,7 @@ type MetaMaskOnboardingState = {
   accounts: string[];
 };
 
-type MetaMaskAdapter = {
-  onboardingState: MetaMaskOnboardingState;
+type MetaMaskAdapter = MetaMaskOnboardingState & {
   connect: () => void;
 };
 
@@ -19,8 +18,8 @@ export function useMetaMask(): MetaMaskAdapter {
   );
 
   const initialStatus = MetaMaskOnboarding.isMetaMaskInstalled()
-    ? OnboardingStatus.notConnected
-    : OnboardingStatus.notInstalled;
+    ? OnboardingStatus.from('notConnected')
+    : OnboardingStatus.from('notInstalled');
   const [onboardingState, setOnboardingState] =
     useState<MetaMaskOnboardingState>({
       status: initialStatus,
@@ -29,7 +28,7 @@ export function useMetaMask(): MetaMaskAdapter {
 
   const handleAccountsChanded = useCallback((accounts: string[]) => {
     setOnboardingState({
-      status: OnboardingStatus.connected,
+      status: OnboardingStatus.from('connected'),
       accounts
     });
     metaMaskOnboarding.current?.stopOnboarding();
@@ -50,7 +49,7 @@ export function useMetaMask(): MetaMaskAdapter {
   const connect = useCallback(() => {
     if (MetaMaskOnboarding.isMetaMaskInstalled()) {
       setOnboardingState({
-        status: OnboardingStatus.connecting,
+        status: OnboardingStatus.from('connecting'),
         accounts: []
       });
       ethereum
@@ -60,12 +59,15 @@ export function useMetaMask(): MetaMaskAdapter {
         .then(handleAccountsChanded);
     } else {
       setOnboardingState({
-        status: OnboardingStatus.onboarding,
+        status: OnboardingStatus.from('onboarding'),
         accounts: []
       });
       metaMaskOnboarding.current?.startOnboarding();
     }
   }, [handleAccountsChanded]);
 
-  return { onboardingState, connect };
+  return {
+    ...onboardingState,
+    connect
+  };
 }
