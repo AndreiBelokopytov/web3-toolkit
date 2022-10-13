@@ -3,8 +3,7 @@ declare type MetaMaskOnboardingState = {
     status: OnboardingStatus;
     accounts: string[];
 };
-declare type MetaMaskAdapter = {
-    onboardingState: MetaMaskOnboardingState;
+declare type MetaMaskAdapter = MetaMaskOnboardingState & {
     connect: () => void;
 };
 export declare function useMetaMask(): MetaMaskAdapter;

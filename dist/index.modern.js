@@ -21,21 +21,41 @@ function shortenAddress(address, substrLength) {
   return address.slice(0, substrLength) + "..." + address.slice(address.length - substrLength, address.length);
 }
 
-var MetaMaskOnboardingStatus;
+function _extends() {
+  _extends = Object.assign ? Object.assign.bind() : function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
 
-(function (MetaMaskOnboardingStatus) {
-  MetaMaskOnboardingStatus["notInstalled"] = "notInstalled";
-  MetaMaskOnboardingStatus["notConnected"] = "notConnected";
-  MetaMaskOnboardingStatus["onboarding"] = "onboarding";
-  MetaMaskOnboardingStatus["connecting"] = "connecting";
-  MetaMaskOnboardingStatus["connected"] = "connected";
-})(MetaMaskOnboardingStatus || (MetaMaskOnboardingStatus = {}));
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+  return _extends.apply(this, arguments);
+}
+
+var MetaMaskOnboardingStatus = {
+  from: function from(value) {
+    return {
+      value: value,
+      isNotInstalled: value === 'notInstalled',
+      isNotConnected: value === 'notConnected',
+      isConnected: value === 'connected',
+      isConnecting: value === 'connecting',
+      isOnboarding: value === 'onboarding'
+    };
+  }
+};
 
 var ethereum = window.ethereum;
 
 function useMetaMask() {
   var metaMaskOnboarding = useRef(new MetaMaskOnboarding());
-  var initialStatus = MetaMaskOnboarding.isMetaMaskInstalled() ? MetaMaskOnboardingStatus.notConnected : MetaMaskOnboardingStatus.notInstalled;
+  var initialStatus = MetaMaskOnboarding.isMetaMaskInstalled() ? MetaMaskOnboardingStatus.from('notConnected') : MetaMaskOnboardingStatus.from('notInstalled');
 
   var _useState = useState({
     status: initialStatus,
@@ -48,7 +68,7 @@ function useMetaMask() {
     var _metaMaskOnboarding$c;
 
     setOnboardingState({
-      status: MetaMaskOnboardingStatus.connected,
+      status: MetaMaskOnboardingStatus.from('connected'),
       accounts: accounts
     });
     (_metaMaskOnboarding$c = metaMaskOnboarding.current) === null || _metaMaskOnboarding$c === void 0 ? void 0 : _metaMaskOnboarding$c.stopOnboarding();
@@ -67,7 +87,7 @@ function useMetaMask() {
   var connect = useCallback(function () {
     if (MetaMaskOnboarding.isMetaMaskInstalled()) {
       setOnboardingState({
-        status: MetaMaskOnboardingStatus.connecting,
+        status: MetaMaskOnboardingStatus.from('connecting'),
         accounts: []
       });
       ethereum.request({
@@ -77,33 +97,15 @@ function useMetaMask() {
       var _metaMaskOnboarding$c2;
 
       setOnboardingState({
-        status: MetaMaskOnboardingStatus.onboarding,
+        status: MetaMaskOnboardingStatus.from('onboarding'),
         accounts: []
       });
       (_metaMaskOnboarding$c2 = metaMaskOnboarding.current) === null || _metaMaskOnboarding$c2 === void 0 ? void 0 : _metaMaskOnboarding$c2.startOnboarding();
     }
   }, [handleAccountsChanded]);
-  return {
-    onboardingState: onboardingState,
+  return _extends({}, onboardingState, {
     connect: connect
-  };
-}
-
-function _extends() {
-  _extends = Object.assign ? Object.assign.bind() : function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-
-    return target;
-  };
-  return _extends.apply(this, arguments);
+  });
 }
 
 // A type of promise-like that resolves synchronously and supports only one observer
