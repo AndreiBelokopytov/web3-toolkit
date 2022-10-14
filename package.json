@@ -63,5 +63,8 @@
   ],
   "dependencies": {
     "@metamask/onboarding": "^1.0.1"
+  },
+  "publishConfig": {
+    "@AndreiBelokopytov:registry": "https://npm.pkg.github.com"
   }
 }
