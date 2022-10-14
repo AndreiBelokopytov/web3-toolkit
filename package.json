@@ -9,7 +9,7 @@
   "module": "dist/index.modern.js",
   "source": "src/index.tsx",
   "engines": {
-    "node": "^14.15.0 || ^16.10.0 || >=18.0.0"
+    "node": "^14.17.0 || ^16.10.0 || >=18.0.0"
   },
   "scripts": {
     "build": "microbundle-crl --no-compress --format modern,cjs",
