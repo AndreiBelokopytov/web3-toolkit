@@ -1,4 +1,4 @@
-import { Address } from './address';
+import { Address } from './Address';
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 
