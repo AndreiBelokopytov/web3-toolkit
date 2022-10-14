@@ -12,7 +12,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 12
-      - run: npm ci
+      - run: yarn install --frozen-lockfile
       - run: npm test
 
   publish-gpr:
