@@ -27,10 +27,18 @@ export function useMetaMask(): MetaMaskAdapter {
     });
 
   const handleAccountsChanded = useCallback((accounts: string[]) => {
-    setOnboardingState({
-      status: OnboardingStatus.from('connected'),
-      accounts
-    });
+    if (accounts.length > 0) {
+      setOnboardingState({
+        status: OnboardingStatus.from('connected'),
+        accounts
+      });
+    } else {
+      setOnboardingState({
+        status: OnboardingStatus.from('notConnected'),
+        accounts
+      });
+    }
+
     metaMaskOnboarding.current?.stopOnboarding();
   }, []);
 

@@ -2,17 +2,14 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { useMetaMask } from './useMetaMask';
 import MetaMaskOnboarding from '@metamask/onboarding';
+import { ethereum } from '../../providers/ethereum';
 const ETH_ADDRESS = '0x965B7A773e3632b259108d246A7Cfdcdff118999';
 
 jest.mock('@metamask/onboarding');
 jest.mock('../../providers/ethereum', () => {
   return {
     ethereum: {
-      request() {
-        return new Promise((resolve) =>
-          setTimeout(() => resolve([ETH_ADDRESS]), 200)
-        );
-      },
+      request: jest.fn(),
       on() {},
       removeListener() {}
     }
@@ -35,6 +32,12 @@ const MetaMaskButton = () => {
 describe('useMetaMask', () => {
   beforeEach(() => {
     jest.resetModules();
+    // @ts-ignore
+    ethereum.request.mockImplementation(() => {
+      return new Promise((resolve) =>
+        setTimeout(() => resolve([ETH_ADDRESS]), 200)
+      );
+    });
   });
 
   it('has "notInstalled" state if MetaMask is not installed', () => {
@@ -42,6 +45,21 @@ describe('useMetaMask', () => {
     MetaMaskOnboarding.isMetaMaskInstalled.mockReturnValue(false);
     render(<MetaMaskButton />);
     expect(screen.getByRole('button')).toHaveTextContent('notInstalled');
+  });
+
+  it('has "notConnected" state if empty account list given', async () => {
+    //@ts-ignore
+    MetaMaskOnboarding.isMetaMaskInstalled.mockReturnValue(true);
+    //@ts-ignore
+    ethereum.request.mockImplementation(() => {
+      return new Promise((resolve) => setTimeout(() => resolve([]), 200));
+    });
+    render(<MetaMaskButton />);
+    fireEvent.click(screen.getByRole('button'));
+    await waitFor(async () => {
+      const button = await screen.getByRole('button');
+      expect(button).toHaveTextContent('notConnected');
+    });
   });
 
   it('has "notConnected" state if MetaMask is installed', () => {
