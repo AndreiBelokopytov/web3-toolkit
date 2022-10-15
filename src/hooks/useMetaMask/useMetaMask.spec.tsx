@@ -3,6 +3,8 @@ import React from 'react';
 import { useMetaMask } from './useMetaMask';
 import MetaMaskOnboarding from '@metamask/onboarding';
 import { ethereum } from '../../providers/ethereum';
+import '@testing-library/jest-dom/extend-expect';
+
 const ETH_ADDRESS = '0x965B7A773e3632b259108d246A7Cfdcdff118999';
 
 jest.mock('@metamask/onboarding');
