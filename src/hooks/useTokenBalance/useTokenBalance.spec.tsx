@@ -4,7 +4,7 @@ import React, { useCallback } from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 
-const ALCHEMY_API_KEY = process.env.REACT_APP_ALCHEMY_API_KEY;
+const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY;
 
 const TOKEN_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984';
 const TOKEN_CREATOR = '0x41653c7d61609D856f29355E404F310Ec4142Cfb';
