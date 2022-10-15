@@ -1,67 +1,26 @@
-# web3-toolkit
+# web3-toolkit-react
 
 > Web3 Toolkit for React
 
 ## Install
 
-```bash
-npm install --save git+https://github.com/AndreiBelokopytov/web3-toolkit.git#v0.1.x
+The library has one peer dependency so install it first:
+
+```
+npm install --save ethers
 ```
 
-## Usage
+Also make sure versions of `react` and `react-dom` in your package.json are higher than `16.14.0`.
 
-### Address
+Finally install the library:
 
-Displays a shorten Ethereum address
-
-```tsx
-<Address>{ETH_ADDRESS}</Address>
+```
+npm install --save web3-toolkit-react
 ```
 
-### useMetaMask
+## Examples
 
-Provides a convenient way to access the MetaMask API
-
-```tsx
-const MetaMaskButton = () => {
-  const { accounts, status, connect } = useMetaMask();
-  return status.isConnected ?
-    <Address>{accounts[0]}<Address> :
-    <button onClick={connect}>Connect</button>
-  );
-};
-```
-
-### useTokenBalance
-
-Gets the token balance for an ERC20 contract
-
-```tsx
-const TokenBalance = () => {
-  const { balance, isLoading, errorMessage } = useTokenBalance(
-    TOKEN_ADDRESS,
-    WALLET_ADDRESS,
-    provider
-  );
-
-  const handleChange = useCallback(() => null, []);
-
-  return (
-    <>
-      <label>
-        Token balance
-        <input
-          type={'text'}
-          value={balance.toString()}
-          onChange={handleChange}
-        />
-      </label>
-      {isLoading && <p>loading</p>}
-      {errorMessage && <p>{`{error: ${errorMessage}`}</p>}
-    </>
-  );
-};
-```
+See examples of usage in the `stories` folder.
 
 ## License
 
