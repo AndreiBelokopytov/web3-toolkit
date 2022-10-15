@@ -4,4 +4,4 @@
 export $(cat .env | xargs)
 yarn test:unit
 yarn test:lint
-yarn test:build
+yarn test
