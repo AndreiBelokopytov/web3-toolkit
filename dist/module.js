@@ -1,7 +1,7 @@
-var $adHgb$reactjsxruntime = require("react/jsx-runtime");
-var $adHgb$react = require("react");
-var $adHgb$metamaskonboarding = require("@metamask/onboarding");
-var $adHgb$ethers = require("ethers");
+import {jsx as $h1OuD$jsx} from "react/jsx-runtime";
+import $h1OuD$react, {useRef as $h1OuD$useRef, useState as $h1OuD$useState, useCallback as $h1OuD$useCallback, useEffect as $h1OuD$useEffect, useMemo as $h1OuD$useMemo} from "react";
+import $h1OuD$metamaskonboarding from "@metamask/onboarding";
+import {Contract as $h1OuD$Contract, BigNumber as $h1OuD$BigNumber} from "ethers";
 
 function $parcel$exportWildcard(dest, source) {
   Object.keys(source).forEach(function(key) {
@@ -19,65 +19,62 @@ function $parcel$exportWildcard(dest, source) {
 
   return dest;
 }
-function $parcel$interopDefault(a) {
-  return a && a.__esModule ? a.default : a;
-}
 function $parcel$export(e, n, v, s) {
   Object.defineProperty(e, n, {get: v, set: s, enumerable: true, configurable: true});
 }
-var $f4f77e0c5912504a$exports = {};
-var $8c7f795f82028d2c$exports = {};
-var $bcf4b3780774a97d$exports = {};
+var $46914435460bb52d$exports = {};
+var $3bf0e81424fa74e3$exports = {};
+var $46ace6a8ad08831d$exports = {};
 
-$parcel$export($bcf4b3780774a97d$exports, "Address", () => $bcf4b3780774a97d$export$73974d1f547d9d48);
+$parcel$export($46ace6a8ad08831d$exports, "Address", () => $46ace6a8ad08831d$export$73974d1f547d9d48);
 
 
-const $bcf4b3780774a97d$var$DEFAULT_SUBSTRING_LENGTH = 6;
-const $bcf4b3780774a97d$export$73974d1f547d9d48 = /*#__PURE__*/ (0, ($parcel$interopDefault($adHgb$react))).memo(({ children: address , substrLength: substrLength  })=>{
-    return /*#__PURE__*/ (0, $adHgb$reactjsxruntime.jsx)("span", {
-        children: $bcf4b3780774a97d$var$shortenAddress(address, substrLength)
+const $46ace6a8ad08831d$var$DEFAULT_SUBSTRING_LENGTH = 6;
+const $46ace6a8ad08831d$export$73974d1f547d9d48 = /*#__PURE__*/ (0, $h1OuD$react).memo(({ children: address , substrLength: substrLength  })=>{
+    return /*#__PURE__*/ (0, $h1OuD$jsx)("span", {
+        children: $46ace6a8ad08831d$var$shortenAddress(address, substrLength)
     });
 });
-function $bcf4b3780774a97d$var$shortenAddress(address, substrLength = $bcf4b3780774a97d$var$DEFAULT_SUBSTRING_LENGTH) {
+function $46ace6a8ad08831d$var$shortenAddress(address, substrLength = $46ace6a8ad08831d$var$DEFAULT_SUBSTRING_LENGTH) {
     if (address.length <= substrLength * 2 || address.match(/.*\.{3}.*/)) return address;
     return `${address.slice(0, substrLength)}...${address.slice(address.length - substrLength, address.length)}`;
 }
 
 
-$parcel$exportWildcard($8c7f795f82028d2c$exports, $bcf4b3780774a97d$exports);
+$parcel$exportWildcard($3bf0e81424fa74e3$exports, $46ace6a8ad08831d$exports);
 
 
-$parcel$exportWildcard($f4f77e0c5912504a$exports, $8c7f795f82028d2c$exports);
+$parcel$exportWildcard($46914435460bb52d$exports, $3bf0e81424fa74e3$exports);
 
 
-var $c0c07659166c9de8$exports = {};
-var $6aa5989b47ada426$exports = {};
-var $7dfaf4cffe76781c$exports = {};
+var $5700acf22cb6391e$exports = {};
+var $fb44dc37b7573206$exports = {};
+var $55abee8d73d3bb4a$exports = {};
 
-$parcel$export($7dfaf4cffe76781c$exports, "useMetaMask", () => $7dfaf4cffe76781c$export$6f1a648d65fc54a1);
-
-
-var $b074651bcad67e82$exports = {};
-var $d23f3f4243372246$exports = {};
-
-$parcel$export($d23f3f4243372246$exports, "metaMaskProvider", () => $d23f3f4243372246$export$621e95380bede4a2);
-const $d23f3f4243372246$export$621e95380bede4a2 = window.ethereum;
+$parcel$export($55abee8d73d3bb4a$exports, "useMetaMask", () => $55abee8d73d3bb4a$export$6f1a648d65fc54a1);
 
 
-$parcel$exportWildcard($b074651bcad67e82$exports, $d23f3f4243372246$exports);
+var $95ad1495d8d22fad$exports = {};
+var $a7e306555e36ddd8$exports = {};
+
+$parcel$export($a7e306555e36ddd8$exports, "metaMaskProvider", () => $a7e306555e36ddd8$export$621e95380bede4a2);
+const $a7e306555e36ddd8$export$621e95380bede4a2 = window.ethereum;
 
 
-function $7dfaf4cffe76781c$export$6f1a648d65fc54a1() {
-    const metaMaskOnboarding = (0, $adHgb$react.useRef)(new (0, ($parcel$interopDefault($adHgb$metamaskonboarding)))());
-    const initialState = (0, ($parcel$interopDefault($adHgb$metamaskonboarding))).isMetaMaskInstalled() ? {
+$parcel$exportWildcard($95ad1495d8d22fad$exports, $a7e306555e36ddd8$exports);
+
+
+function $55abee8d73d3bb4a$export$6f1a648d65fc54a1() {
+    const metaMaskOnboarding = (0, $h1OuD$useRef)(new (0, $h1OuD$metamaskonboarding)());
+    const initialState = (0, $h1OuD$metamaskonboarding).isMetaMaskInstalled() ? {
         status: "notConnected",
         accounts: []
     } : {
         status: "notInstalled",
         accounts: []
     };
-    const [onboardingState, setOnboardingState] = (0, $adHgb$react.useState)(initialState);
-    const handleAccountsChanded = (0, $adHgb$react.useCallback)((accounts)=>{
+    const [onboardingState, setOnboardingState] = (0, $h1OuD$useState)(initialState);
+    const handleAccountsChanded = (0, $h1OuD$useCallback)((accounts)=>{
         if (accounts.length > 0) setOnboardingState((prevState)=>({
                 ...prevState,
                 status: "connected",
@@ -92,27 +89,27 @@ function $7dfaf4cffe76781c$export$6f1a648d65fc54a1() {
     }, [
         setOnboardingState
     ]);
-    const handleChainChanged = (0, $adHgb$react.useCallback)((chainId)=>setOnboardingState((prevState)=>({
+    const handleChainChanged = (0, $h1OuD$useCallback)((chainId)=>setOnboardingState((prevState)=>({
                 ...prevState,
                 chainId: chainId
             })), []);
-    (0, $adHgb$react.useEffect)(()=>{
-        if ((0, ($parcel$interopDefault($adHgb$metamaskonboarding))).isMetaMaskInstalled()) {
-            (0, $d23f3f4243372246$export$621e95380bede4a2).on("accountsChanged", handleAccountsChanded);
-            (0, $d23f3f4243372246$export$621e95380bede4a2).on("chainChanged", handleChainChanged);
+    (0, $h1OuD$useEffect)(()=>{
+        if ((0, $h1OuD$metamaskonboarding).isMetaMaskInstalled()) {
+            (0, $a7e306555e36ddd8$export$621e95380bede4a2).on("accountsChanged", handleAccountsChanded);
+            (0, $a7e306555e36ddd8$export$621e95380bede4a2).on("chainChanged", handleChainChanged);
         }
         return ()=>{
-            if ((0, ($parcel$interopDefault($adHgb$metamaskonboarding))).isMetaMaskInstalled()) {
-                (0, $d23f3f4243372246$export$621e95380bede4a2).removeListener("accountsChanged", handleAccountsChanded);
-                (0, $d23f3f4243372246$export$621e95380bede4a2).removeListener("chainChanged", handleChainChanged);
+            if ((0, $h1OuD$metamaskonboarding).isMetaMaskInstalled()) {
+                (0, $a7e306555e36ddd8$export$621e95380bede4a2).removeListener("accountsChanged", handleAccountsChanded);
+                (0, $a7e306555e36ddd8$export$621e95380bede4a2).removeListener("chainChanged", handleChainChanged);
             }
         };
     }, [
         handleAccountsChanded,
         handleChainChanged
     ]);
-    const connect = (0, $adHgb$react.useCallback)(async ()=>{
-        if (!(0, ($parcel$interopDefault($adHgb$metamaskonboarding))).isMetaMaskInstalled()) {
+    const connect = (0, $h1OuD$useCallback)(async ()=>{
+        if (!(0, $h1OuD$metamaskonboarding).isMetaMaskInstalled()) {
             setOnboardingState((prevState)=>({
                     ...prevState,
                     status: "onboarding",
@@ -128,11 +125,11 @@ function $7dfaf4cffe76781c$export$6f1a648d65fc54a1() {
                 error: undefined
             }));
         try {
-            const accounts = await (0, $d23f3f4243372246$export$621e95380bede4a2).request({
+            const accounts = await (0, $a7e306555e36ddd8$export$621e95380bede4a2).request({
                 method: "eth_requestAccounts"
             });
             handleAccountsChanded(accounts);
-            const chainId = await (0, $d23f3f4243372246$export$621e95380bede4a2).request({
+            const chainId = await (0, $a7e306555e36ddd8$export$621e95380bede4a2).request({
                 method: "eth_chainId"
             });
             handleChainChanged(chainId);
@@ -162,10 +159,10 @@ function $7dfaf4cffe76781c$export$6f1a648d65fc54a1() {
 }
 
 
-var $59830d75f32d61f8$exports = {};
+var $4c518f06881b3c31$exports = {};
 
-$parcel$export($59830d75f32d61f8$exports, "OnboardingState", () => $59830d75f32d61f8$export$ff1cd117057bac38);
-const $59830d75f32d61f8$export$ff1cd117057bac38 = {
+$parcel$export($4c518f06881b3c31$exports, "OnboardingState", () => $4c518f06881b3c31$export$ff1cd117057bac38);
+const $4c518f06881b3c31$export$ff1cd117057bac38 = {
     notInstalled () {
         return {
             status: "notInstalled",
@@ -199,35 +196,35 @@ const $59830d75f32d61f8$export$ff1cd117057bac38 = {
 };
 
 
-$parcel$exportWildcard($6aa5989b47ada426$exports, $7dfaf4cffe76781c$exports);
-$parcel$exportWildcard($6aa5989b47ada426$exports, $59830d75f32d61f8$exports);
+$parcel$exportWildcard($fb44dc37b7573206$exports, $55abee8d73d3bb4a$exports);
+$parcel$exportWildcard($fb44dc37b7573206$exports, $4c518f06881b3c31$exports);
 
 
-var $f0647d1c2a263569$exports = {};
-var $88f989a8bd357839$exports = {};
+var $80d717538ad2e1e9$exports = {};
+var $9cfbd30380651811$exports = {};
 
-$parcel$export($88f989a8bd357839$exports, "useTokenBalance", () => $88f989a8bd357839$export$c79c82fb94eb75b4);
+$parcel$export($9cfbd30380651811$exports, "useTokenBalance", () => $9cfbd30380651811$export$c79c82fb94eb75b4);
 
 
-const $88f989a8bd357839$var$abi = [
+const $9cfbd30380651811$var$abi = [
     "function balanceOf(address owner) view returns (uint256)",
     "function decimals() view returns (uint8)",
     "function symbol() view returns (string)",
     "function transfer(address to, uint amount) returns (bool)",
     "event Transfer(address indexed from, address indexed to, uint amount)"
 ];
-const $88f989a8bd357839$export$c79c82fb94eb75b4 = (contractAddress, address, provider)=>{
-    const contract = (0, $adHgb$react.useMemo)(()=>{
-        return new (0, $adHgb$ethers.Contract)(contractAddress, $88f989a8bd357839$var$abi, provider);
+const $9cfbd30380651811$export$c79c82fb94eb75b4 = (contractAddress, address, provider)=>{
+    const contract = (0, $h1OuD$useMemo)(()=>{
+        return new (0, $h1OuD$Contract)(contractAddress, $9cfbd30380651811$var$abi, provider);
     }, [
         contractAddress,
         provider
     ]);
-    const [state, setState] = (0, $adHgb$react.useState)({
-        balance: (0, $adHgb$ethers.BigNumber).from(0),
+    const [state, setState] = (0, $h1OuD$useState)({
+        balance: (0, $h1OuD$BigNumber).from(0),
         isLoading: true
     });
-    const refresh = (0, $adHgb$react.useCallback)(async ()=>{
+    const refresh = (0, $h1OuD$useCallback)(async ()=>{
         setState((prevState)=>({
                 ...prevState,
                 isLoading: true,
@@ -253,7 +250,7 @@ const $88f989a8bd357839$export$c79c82fb94eb75b4 = (contractAddress, address, pro
         address,
         contract
     ]);
-    (0, $adHgb$react.useEffect)(()=>{
+    (0, $h1OuD$useEffect)(()=>{
         refresh();
     }, [
         refresh
@@ -265,17 +262,15 @@ const $88f989a8bd357839$export$c79c82fb94eb75b4 = (contractAddress, address, pro
 };
 
 
-$parcel$exportWildcard($f0647d1c2a263569$exports, $88f989a8bd357839$exports);
+$parcel$exportWildcard($80d717538ad2e1e9$exports, $9cfbd30380651811$exports);
 
 
-$parcel$exportWildcard($c0c07659166c9de8$exports, $6aa5989b47ada426$exports);
-$parcel$exportWildcard($c0c07659166c9de8$exports, $f0647d1c2a263569$exports);
+$parcel$exportWildcard($5700acf22cb6391e$exports, $fb44dc37b7573206$exports);
+$parcel$exportWildcard($5700acf22cb6391e$exports, $80d717538ad2e1e9$exports);
 
 
 
-$parcel$exportWildcard(module.exports, $f4f77e0c5912504a$exports);
-$parcel$exportWildcard(module.exports, $c0c07659166c9de8$exports);
-$parcel$exportWildcard(module.exports, $b074651bcad67e82$exports);
 
 
-//# sourceMappingURL=index.js.map
+export {$46ace6a8ad08831d$export$73974d1f547d9d48 as Address, $55abee8d73d3bb4a$export$6f1a648d65fc54a1 as useMetaMask, $4c518f06881b3c31$export$ff1cd117057bac38 as OnboardingState, $9cfbd30380651811$export$c79c82fb94eb75b4 as useTokenBalance, $a7e306555e36ddd8$export$621e95380bede4a2 as metaMaskProvider};
+//# sourceMappingURL=module.js.map
