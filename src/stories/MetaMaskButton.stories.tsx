@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ComponentMeta } from '@storybook/react';
 import { Address } from '../components';
 import { useMetaMask } from '../hooks';
 
 const MetaMaskButton = () => {
-  const { accounts, status, connect } = useMetaMask();
-  const text = status.isConnecting ? 'Connecting...' : 'Connect';
-  return status.isConnected ? (
+  const { accounts, chainId, isConnecting, isConnected, connect } =
+    useMetaMask();
+  const text = isConnecting ? 'Connecting...' : 'Connect';
+
+  useEffect(() => {
+    if (chainId && chainId !== '0x5') {
+      alert('Switch to Goerli network');
+    }
+  }, [chainId]);
+
+  return isConnected ? (
     <Address>{accounts[0]}</Address>
   ) : (
     <button onClick={connect}>{text}</button>

@@ -1,81 +1,144 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { MetaMaskOnboardingStatus as OnboardingStatus } from './MetaMaskOnboardingStatus';
 import MetaMaskOnboarding from '@metamask/onboarding';
-import { ethereum } from '../../providers/ethereum';
+import { metaMaskProvider } from '../../providers';
 
-type MetaMaskOnboardingState = {
-  status: OnboardingStatus;
+export type OnBoardingStateStatus =
+  | 'notInstalled'
+  | 'notConnected'
+  | 'onboarding'
+  | 'connecting'
+  | 'connected';
+
+type OnboardingState = {
+  status: OnBoardingStateStatus;
   accounts: string[];
+  chainId?: string;
+  error?: string;
 };
 
-type MetaMaskAdapter = MetaMaskOnboardingState & {
+type Result = OnboardingState & {
+  isNotInstalled: boolean;
+  isNotConnected: boolean;
+  isConnected: boolean;
+  isConnecting: boolean;
+  isOnboarding: boolean;
   connect: () => void;
 };
 
-export function useMetaMask(): MetaMaskAdapter {
+export function useMetaMask(): Result {
   const metaMaskOnboarding = useRef<MetaMaskOnboarding>(
     new MetaMaskOnboarding()
   );
 
-  const initialStatus = MetaMaskOnboarding.isMetaMaskInstalled()
-    ? OnboardingStatus.from('notConnected')
-    : OnboardingStatus.from('notInstalled');
+  const initialState: OnboardingState = MetaMaskOnboarding.isMetaMaskInstalled()
+    ? {
+        status: 'notConnected',
+        accounts: []
+      }
+    : {
+        status: 'notInstalled',
+        accounts: []
+      };
+
   const [onboardingState, setOnboardingState] =
-    useState<MetaMaskOnboardingState>({
-      status: initialStatus,
-      accounts: []
-    });
+    useState<OnboardingState>(initialState);
 
-  const handleAccountsChanded = useCallback((accounts: string[]) => {
-    if (accounts.length > 0) {
-      setOnboardingState({
-        status: OnboardingStatus.from('connected'),
-        accounts
-      });
-    } else {
-      setOnboardingState({
-        status: OnboardingStatus.from('notConnected'),
-        accounts
-      });
-    }
+  const handleAccountsChanded = useCallback(
+    (accounts: string[]) => {
+      if (accounts.length > 0) {
+        setOnboardingState((prevState) => ({
+          ...prevState,
+          status: 'connected',
+          accounts
+        }));
+      } else {
+        setOnboardingState((prevState) => ({
+          ...prevState,
+          status: 'notConnected',
+          accounts: []
+        }));
+      }
 
-    metaMaskOnboarding.current?.stopOnboarding();
-  }, []);
+      metaMaskOnboarding.current?.stopOnboarding();
+    },
+    [setOnboardingState]
+  );
+
+  const handleChainChanged = useCallback(
+    (chainId: string) =>
+      setOnboardingState((prevState) => ({
+        ...prevState,
+        chainId
+      })),
+    []
+  );
 
   useEffect(() => {
     if (MetaMaskOnboarding.isMetaMaskInstalled()) {
-      ethereum.on('accountsChanged', handleAccountsChanded);
+      metaMaskProvider.on('accountsChanged', handleAccountsChanded);
+      metaMaskProvider.on('chainChanged', handleChainChanged);
     }
 
     return () => {
       if (MetaMaskOnboarding.isMetaMaskInstalled()) {
-        ethereum.removeListener('accountsChanged', handleAccountsChanded);
+        metaMaskProvider.removeListener(
+          'accountsChanged',
+          handleAccountsChanded
+        );
+        metaMaskProvider.removeListener('chainChanged', handleChainChanged);
       }
     };
-  }, [handleAccountsChanded]);
+  }, [handleAccountsChanded, handleChainChanged]);
 
-  const connect = useCallback(() => {
-    if (MetaMaskOnboarding.isMetaMaskInstalled()) {
-      setOnboardingState({
-        status: OnboardingStatus.from('connecting'),
+  const connect = useCallback(async () => {
+    if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
+      setOnboardingState((prevState) => ({
+        ...prevState,
+        status: 'onboarding',
         accounts: []
-      });
-      ethereum
-        .request({
-          method: 'eth_requestAccounts'
-        })
-        .then(handleAccountsChanded);
-    } else {
-      setOnboardingState({
-        status: OnboardingStatus.from('onboarding'),
-        accounts: []
-      });
+      }));
       metaMaskOnboarding.current?.startOnboarding();
+      return;
     }
-  }, [handleAccountsChanded]);
+
+    setOnboardingState((prevState) => ({
+      ...prevState,
+      status: 'connecting',
+      accounts: [],
+      error: undefined
+    }));
+    try {
+      const accounts = await metaMaskProvider.request({
+        method: 'eth_requestAccounts'
+      });
+      handleAccountsChanded(accounts);
+      const chainId = await metaMaskProvider.request({
+        method: 'eth_chainId'
+      });
+      handleChainChanged(chainId);
+    } catch (err) {
+      let message: string | undefined;
+      if (err instanceof Error) {
+        message = err?.message;
+      }
+      if (typeof err === 'string') {
+        message = err;
+      }
+      setOnboardingState((prevState) => ({
+        ...prevState,
+        status: 'notConnected',
+        error: message
+      }));
+    }
+  }, [handleAccountsChanded, handleChainChanged]);
 
   return {
     ...onboardingState,
+    isNotInstalled: onboardingState.status === 'notInstalled',
+    isNotConnected: onboardingState.status === 'notConnected',
+    isConnected: onboardingState.status === 'connected',
+    isConnecting: onboardingState.status === 'connecting',
+    isOnboarding: onboardingState.status === 'onboarding',
     connect
   };
 }
