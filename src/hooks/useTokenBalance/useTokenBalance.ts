@@ -4,25 +4,19 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 type TokenBalanceState = {
   balance: BigNumber;
   isLoading: boolean;
-  errorMessage?: string;
+  error?: string;
 };
 
 type TokenBalance = TokenBalanceState & {
   refresh: () => void;
 };
 
-const abi = [
-  'function balanceOf(address owner) view returns (uint256)',
-  'function decimals() view returns (uint8)',
-  'function symbol() view returns (string)',
-  'function transfer(address to, uint amount) returns (bool)',
-  'event Transfer(address indexed from, address indexed to, uint amount)'
-];
+const abi = ['function balanceOf(address owner) view returns (uint256)'];
 
 export const useTokenBalance = (
   contractAddress: string,
   address: string,
-  provider: ReturnType<typeof getDefaultProvider>
+  provider?: ReturnType<typeof getDefaultProvider>
 ): TokenBalance => {
   const contract = useMemo(() => {
     return new Contract(contractAddress, abi, provider);
@@ -37,7 +31,7 @@ export const useTokenBalance = (
     setState((prevState) => ({
       ...prevState,
       isLoading: true,
-      errorMessage: undefined
+      error: undefined
     }));
     try {
       const balance = await contract.balanceOf(address);
@@ -56,7 +50,8 @@ export const useTokenBalance = (
       }
       setState((prevState) => ({
         ...prevState,
-        errorMessage
+        isLoading: false,
+        error: errorMessage
       }));
     }
   }, [address, contract]);

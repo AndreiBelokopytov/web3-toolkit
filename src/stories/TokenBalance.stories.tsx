@@ -4,18 +4,23 @@ import { ComponentMeta } from '@storybook/react';
 import React from 'react';
 import { useTokenBalance } from '../hooks';
 
-const TOKEN_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984';
-const TOKEN_CREATOR = '0x41653c7d61609D856f29355E404F310Ec4142Cfb';
+const ERC20_TOKEN_ADDRESS = '0x51f44ca59b867E005e48FA573Cb8df83FC7f7597';
+const OWNER_ADDRESS = '0x797D19711fB4a4363AFc6fdc5070097485708ee9';
 
 const provider = new ethers.providers.AlchemyProvider(
-  'mainnet',
+  'goerli',
   process.env.ALCHEMY_API_KEY
 );
 
-const TokenBalance = () => {
+type Props = {
+  tokenAddress: string;
+  ownerAddress: string;
+};
+
+const TokenBalance = ({ tokenAddress, ownerAddress }: Props) => {
   const { balance, isLoading } = useTokenBalance(
-    TOKEN_ADDRESS,
-    TOKEN_CREATOR,
+    tokenAddress,
+    ownerAddress,
     provider
   );
 
@@ -38,9 +43,12 @@ export default {
   component: TokenBalance
 } as ComponentMeta<typeof TokenBalance>;
 
-export const Primary = () => (
+export const ERC20Story = () => (
   <div className='preview'>
-    <TokenBalance />
+    <TokenBalance
+      tokenAddress={ERC20_TOKEN_ADDRESS}
+      ownerAddress={OWNER_ADDRESS}
+    />
   </div>
 );
-Primary.storyName = 'TokenBalance';
+ERC20Story.storyName = 'ERC20 token balance';
