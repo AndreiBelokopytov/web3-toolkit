@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import MetaMaskOnboarding from '@metamask/onboarding';
 import { metaMaskProvider } from '../../providers';
+import { useWeb3Context } from '../../context/web3Context';
 
 export type OnBoardingStateStatus =
   | 'notInstalled'
@@ -11,8 +12,6 @@ export type OnBoardingStateStatus =
 
 type OnboardingState = {
   status: OnBoardingStateStatus;
-  accounts: string[];
-  chainId?: string;
   error?: string;
 };
 
@@ -29,15 +28,14 @@ export function useMetaMask(): Result {
   const metaMaskOnboarding = useRef<MetaMaskOnboarding>(
     new MetaMaskOnboarding()
   );
+  const { setAddress, setChainId } = useWeb3Context();
 
   const initialState: OnboardingState = MetaMaskOnboarding.isMetaMaskInstalled()
     ? {
-        status: 'notConnected',
-        accounts: []
+        status: 'notConnected'
       }
     : {
-        status: 'notInstalled',
-        accounts: []
+        status: 'notInstalled'
       };
 
   const [onboardingState, setOnboardingState] =
@@ -48,29 +46,25 @@ export function useMetaMask(): Result {
       if (accounts.length > 0) {
         setOnboardingState((prevState) => ({
           ...prevState,
-          status: 'connected',
-          accounts
+          status: 'connected'
         }));
+        setAddress(accounts[0]);
       } else {
         setOnboardingState((prevState) => ({
           ...prevState,
-          status: 'notConnected',
-          accounts: []
+          status: 'notConnected'
         }));
+        setAddress(undefined);
       }
 
       metaMaskOnboarding.current?.stopOnboarding();
     },
-    [setOnboardingState]
+    [setAddress]
   );
 
   const handleChainChanged = useCallback(
-    (chainId: string) =>
-      setOnboardingState((prevState) => ({
-        ...prevState,
-        chainId
-      })),
-    []
+    (chainId: string) => setChainId(chainId),
+    [setChainId]
   );
 
   useEffect(() => {
@@ -94,8 +88,7 @@ export function useMetaMask(): Result {
     if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
       setOnboardingState((prevState) => ({
         ...prevState,
-        status: 'onboarding',
-        accounts: []
+        status: 'onboarding'
       }));
       metaMaskOnboarding.current?.startOnboarding();
       return;
@@ -104,7 +97,6 @@ export function useMetaMask(): Result {
     setOnboardingState((prevState) => ({
       ...prevState,
       status: 'connecting',
-      accounts: [],
       error: undefined
     }));
     try {

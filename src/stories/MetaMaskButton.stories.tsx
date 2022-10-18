@@ -1,21 +1,40 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ComponentMeta } from '@storybook/react';
 import { Address } from '../components';
-import { useMetaMask } from '../hooks';
+import { useChain, useMetaMask } from '../hooks';
+import { useAddress } from '../hooks/useAddress';
+import { Web3Provider } from '../context/web3Context';
 
 const MetaMaskButton = () => {
-  const { accounts, chainId, isConnecting, isConnected, connect } =
-    useMetaMask();
-  const text = isConnecting ? 'Connecting...' : 'Connect';
+  const { status, connect } = useMetaMask();
+  const address = useAddress();
+  const chain = useChain();
 
-  useEffect(() => {
-    if (chainId && chainId !== '0x5') {
-      alert('Switch to Goerli network');
-    }
-  }, [chainId]);
+  let text: string;
+  switch (status) {
+    case 'connecting':
+      text = 'Connecting...';
+      break;
+    case 'onboarding':
+      text = 'Onboarding...';
+      break;
+    case 'notInstalled':
+      text = 'Install MetaMask';
+      break;
+    default:
+      text = 'Connect';
+  }
 
-  return isConnected ? (
-    <Address>{accounts[0]}</Address>
+  return address ? (
+    <div>
+      <div>
+        <strong>Address: </strong>
+        <Address>{address}</Address>
+      </div>
+      <div>
+        <strong>Chain: </strong> {chain?.name}
+      </div>
+    </div>
   ) : (
     <button onClick={connect}>{text}</button>
   );
@@ -28,7 +47,9 @@ export default {
 
 export const Primary = () => (
   <div className='preview'>
-    <MetaMaskButton />
+    <Web3Provider>
+      <MetaMaskButton />
+    </Web3Provider>
   </div>
 );
 Primary.storyName = 'MetaMaskButton';
