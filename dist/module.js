@@ -1,5 +1,5 @@
 import {jsx as $h1OuD$jsx} from "react/jsx-runtime";
-import $h1OuD$react, {useRef as $h1OuD$useRef, useState as $h1OuD$useState, useCallback as $h1OuD$useCallback, useEffect as $h1OuD$useEffect, useMemo as $h1OuD$useMemo} from "react";
+import $h1OuD$react, {createContext as $h1OuD$createContext, useState as $h1OuD$useState, useContext as $h1OuD$useContext, useRef as $h1OuD$useRef, useCallback as $h1OuD$useCallback, useEffect as $h1OuD$useEffect, useMemo as $h1OuD$useMemo} from "react";
 import $h1OuD$metamaskonboarding from "@metamask/onboarding";
 import {Contract as $h1OuD$Contract, BigNumber as $h1OuD$BigNumber} from "ethers";
 
@@ -47,7 +47,84 @@ $parcel$exportWildcard($3bf0e81424fa74e3$exports, $46ace6a8ad08831d$exports);
 $parcel$exportWildcard($46914435460bb52d$exports, $3bf0e81424fa74e3$exports);
 
 
+var $ef92e575eb314c48$exports = {};
+var $1fdce9eeb1cdb6b4$exports = {};
+
+$parcel$export($1fdce9eeb1cdb6b4$exports, "Web3Provider", () => $1fdce9eeb1cdb6b4$export$d05096c9fd9d936d);
+$parcel$export($1fdce9eeb1cdb6b4$exports, "useWeb3Context", () => $1fdce9eeb1cdb6b4$export$80233ff53690030c);
+
+
+const $1fdce9eeb1cdb6b4$var$defaultChainDict = {
+    "0x1": "Mainnet",
+    "0x3": "Ropsten",
+    "0x4": "Rinkeby",
+    "0x5": "Goerli",
+    "0x2a": "Kovan"
+};
+const $1fdce9eeb1cdb6b4$var$Web3Context = /*#__PURE__*/ (0, $h1OuD$createContext)({
+    setAddress: ()=>null,
+    setChainId: ()=>null,
+    chainDict: $1fdce9eeb1cdb6b4$var$defaultChainDict
+});
+const $1fdce9eeb1cdb6b4$export$d05096c9fd9d936d = ({ children: children , address: initialAddress , chainId: initialChainId , provider: provider , chainDict: chainDict = {}  })=>{
+    const [address, setAddress] = (0, $h1OuD$useState)(initialAddress);
+    const [chainId, setChainId] = (0, $h1OuD$useState)(initialChainId);
+    const context = {
+        address: address,
+        chainId: chainId,
+        setAddress: setAddress,
+        setChainId: setChainId,
+        provider: provider,
+        chainDict: {
+            ...$1fdce9eeb1cdb6b4$var$defaultChainDict,
+            ...chainDict
+        }
+    };
+    return /*#__PURE__*/ (0, $h1OuD$jsx)($1fdce9eeb1cdb6b4$var$Web3Context.Provider, {
+        value: context,
+        children: children
+    });
+};
+const $1fdce9eeb1cdb6b4$export$80233ff53690030c = ()=>(0, $h1OuD$useContext)($1fdce9eeb1cdb6b4$var$Web3Context);
+
+
+$parcel$exportWildcard($ef92e575eb314c48$exports, $1fdce9eeb1cdb6b4$exports);
+
+
 var $5700acf22cb6391e$exports = {};
+var $6e6001b2f043445d$exports = {};
+var $1291230e517cb182$exports = {};
+
+$parcel$export($1291230e517cb182$exports, "useAddress", () => $1291230e517cb182$export$ac0686965540f22d);
+
+const $1291230e517cb182$export$ac0686965540f22d = ()=>{
+    const { address: address  } = (0, $1fdce9eeb1cdb6b4$export$80233ff53690030c)();
+    return address;
+};
+
+
+$parcel$exportWildcard($6e6001b2f043445d$exports, $1291230e517cb182$exports);
+
+
+var $800d14b319126306$exports = {};
+var $b97469360e3d3488$exports = {};
+
+$parcel$export($b97469360e3d3488$exports, "useChain", () => $b97469360e3d3488$export$a4a17273dffcc09c);
+
+const $b97469360e3d3488$export$a4a17273dffcc09c = ()=>{
+    const { chainId: chainId , chainDict: chainDict  } = (0, $1fdce9eeb1cdb6b4$export$80233ff53690030c)();
+    if (!chainId) return undefined;
+    const name = chainDict[chainId] ?? "Unknown";
+    return {
+        id: chainId,
+        name: name
+    };
+};
+
+
+$parcel$exportWildcard($800d14b319126306$exports, $b97469360e3d3488$exports);
+
+
 var $fb44dc37b7573206$exports = {};
 var $55abee8d73d3bb4a$exports = {};
 
@@ -64,35 +141,37 @@ const $a7e306555e36ddd8$export$621e95380bede4a2 = window.ethereum;
 $parcel$exportWildcard($95ad1495d8d22fad$exports, $a7e306555e36ddd8$exports);
 
 
+
 function $55abee8d73d3bb4a$export$6f1a648d65fc54a1() {
     const metaMaskOnboarding = (0, $h1OuD$useRef)(new (0, $h1OuD$metamaskonboarding)());
+    const { setAddress: setAddress , setChainId: setChainId  } = (0, $1fdce9eeb1cdb6b4$export$80233ff53690030c)();
     const initialState = (0, $h1OuD$metamaskonboarding).isMetaMaskInstalled() ? {
-        status: "notConnected",
-        accounts: []
+        status: "notConnected"
     } : {
-        status: "notInstalled",
-        accounts: []
+        status: "notInstalled"
     };
     const [onboardingState, setOnboardingState] = (0, $h1OuD$useState)(initialState);
     const handleAccountsChanded = (0, $h1OuD$useCallback)((accounts)=>{
-        if (accounts.length > 0) setOnboardingState((prevState)=>({
-                ...prevState,
-                status: "connected",
-                accounts: accounts
-            }));
-        else setOnboardingState((prevState)=>({
-                ...prevState,
-                status: "notConnected",
-                accounts: []
-            }));
+        if (accounts.length > 0) {
+            setOnboardingState((prevState)=>({
+                    ...prevState,
+                    status: "connected"
+                }));
+            setAddress(accounts[0]);
+        } else {
+            setOnboardingState((prevState)=>({
+                    ...prevState,
+                    status: "notConnected"
+                }));
+            setAddress(undefined);
+        }
         metaMaskOnboarding.current?.stopOnboarding();
     }, [
-        setOnboardingState
+        setAddress
     ]);
-    const handleChainChanged = (0, $h1OuD$useCallback)((chainId)=>setOnboardingState((prevState)=>({
-                ...prevState,
-                chainId: chainId
-            })), []);
+    const handleChainChanged = (0, $h1OuD$useCallback)((chainId)=>setChainId(chainId), [
+        setChainId
+    ]);
     (0, $h1OuD$useEffect)(()=>{
         if ((0, $h1OuD$metamaskonboarding).isMetaMaskInstalled()) {
             (0, $a7e306555e36ddd8$export$621e95380bede4a2).on("accountsChanged", handleAccountsChanded);
@@ -112,8 +191,7 @@ function $55abee8d73d3bb4a$export$6f1a648d65fc54a1() {
         if (!(0, $h1OuD$metamaskonboarding).isMetaMaskInstalled()) {
             setOnboardingState((prevState)=>({
                     ...prevState,
-                    status: "onboarding",
-                    accounts: []
+                    status: "onboarding"
                 }));
             metaMaskOnboarding.current?.startOnboarding();
             return;
@@ -121,7 +199,6 @@ function $55abee8d73d3bb4a$export$6f1a648d65fc54a1() {
         setOnboardingState((prevState)=>({
                 ...prevState,
                 status: "connecting",
-                accounts: [],
                 error: undefined
             }));
         try {
@@ -206,14 +283,25 @@ var $9cfbd30380651811$exports = {};
 $parcel$export($9cfbd30380651811$exports, "useTokenBalance", () => $9cfbd30380651811$export$c79c82fb94eb75b4);
 
 
+var $919486e51744d371$exports = {};
+var $7c49c323774941e5$exports = {};
+
+$parcel$export($7c49c323774941e5$exports, "useProvider", () => $7c49c323774941e5$export$693cdb10cec23617);
+
+const $7c49c323774941e5$export$693cdb10cec23617 = ()=>{
+    const { provider: provider  } = (0, $1fdce9eeb1cdb6b4$export$80233ff53690030c)();
+    return provider;
+};
+
+
+$parcel$exportWildcard($919486e51744d371$exports, $7c49c323774941e5$exports);
+
+
 const $9cfbd30380651811$var$abi = [
-    "function balanceOf(address owner) view returns (uint256)",
-    "function decimals() view returns (uint8)",
-    "function symbol() view returns (string)",
-    "function transfer(address to, uint amount) returns (bool)",
-    "event Transfer(address indexed from, address indexed to, uint amount)"
+    "function balanceOf(address owner) view returns (uint256)"
 ];
-const $9cfbd30380651811$export$c79c82fb94eb75b4 = (contractAddress, address, provider)=>{
+const $9cfbd30380651811$export$c79c82fb94eb75b4 = (contractAddress, address)=>{
+    const provider = (0, $7c49c323774941e5$export$693cdb10cec23617)();
     const contract = (0, $h1OuD$useMemo)(()=>{
         return new (0, $h1OuD$Contract)(contractAddress, $9cfbd30380651811$var$abi, provider);
     }, [
@@ -228,7 +316,7 @@ const $9cfbd30380651811$export$c79c82fb94eb75b4 = (contractAddress, address, pro
         setState((prevState)=>({
                 ...prevState,
                 isLoading: true,
-                errorMessage: undefined
+                error: undefined
             }));
         try {
             const balance = await contract.balanceOf(address);
@@ -243,7 +331,8 @@ const $9cfbd30380651811$export$c79c82fb94eb75b4 = (contractAddress, address, pro
             if (typeof err === "string") errorMessage = err;
             setState((prevState)=>({
                     ...prevState,
-                    errorMessage: errorMessage
+                    isLoading: false,
+                    error: errorMessage
                 }));
         }
     }, [
@@ -265,12 +354,16 @@ const $9cfbd30380651811$export$c79c82fb94eb75b4 = (contractAddress, address, pro
 $parcel$exportWildcard($80d717538ad2e1e9$exports, $9cfbd30380651811$exports);
 
 
+
+$parcel$exportWildcard($5700acf22cb6391e$exports, $6e6001b2f043445d$exports);
+$parcel$exportWildcard($5700acf22cb6391e$exports, $800d14b319126306$exports);
 $parcel$exportWildcard($5700acf22cb6391e$exports, $fb44dc37b7573206$exports);
 $parcel$exportWildcard($5700acf22cb6391e$exports, $80d717538ad2e1e9$exports);
+$parcel$exportWildcard($5700acf22cb6391e$exports, $919486e51744d371$exports);
 
 
 
 
 
-export {$46ace6a8ad08831d$export$73974d1f547d9d48 as Address, $55abee8d73d3bb4a$export$6f1a648d65fc54a1 as useMetaMask, $4c518f06881b3c31$export$ff1cd117057bac38 as OnboardingState, $9cfbd30380651811$export$c79c82fb94eb75b4 as useTokenBalance, $a7e306555e36ddd8$export$621e95380bede4a2 as metaMaskProvider};
+export {$46ace6a8ad08831d$export$73974d1f547d9d48 as Address, $1fdce9eeb1cdb6b4$export$d05096c9fd9d936d as Web3Provider, $1fdce9eeb1cdb6b4$export$80233ff53690030c as useWeb3Context, $1291230e517cb182$export$ac0686965540f22d as useAddress, $b97469360e3d3488$export$a4a17273dffcc09c as useChain, $55abee8d73d3bb4a$export$6f1a648d65fc54a1 as useMetaMask, $4c518f06881b3c31$export$ff1cd117057bac38 as OnboardingState, $9cfbd30380651811$export$c79c82fb94eb75b4 as useTokenBalance, $7c49c323774941e5$export$693cdb10cec23617 as useProvider, $a7e306555e36ddd8$export$621e95380bede4a2 as metaMaskProvider};
 //# sourceMappingURL=module.js.map
