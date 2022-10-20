@@ -1,5 +1,6 @@
-import { BigNumber, Contract, getDefaultProvider } from 'ethers';
+import { BigNumber, Contract } from 'ethers';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useProvider } from '../useProvider';
 
 type TokenBalanceState = {
   balance: BigNumber;
@@ -15,9 +16,9 @@ const abi = ['function balanceOf(address owner) view returns (uint256)'];
 
 export const useTokenBalance = (
   contractAddress: string,
-  address: string,
-  provider?: ReturnType<typeof getDefaultProvider>
+  address: string
 ): TokenBalance => {
+  const provider = useProvider();
   const contract = useMemo(() => {
     return new Contract(contractAddress, abi, provider);
   }, [contractAddress, provider]);

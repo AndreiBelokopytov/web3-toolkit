@@ -1,6 +1,7 @@
-import { BigNumber, Contract, getDefaultProvider } from 'ethers';
+import { BigNumber, Contract } from 'ethers';
 import { useEffect, useMemo, useState } from 'react';
 import { getErrorMessage } from '../../utils';
+import { useProvider } from '../useProvider';
 
 const abi = ['function tokenURI(uint256 tokenId) view returns (string)'];
 
@@ -23,9 +24,9 @@ const asDataUrl = (url: string): string | undefined => {
 
 export const useTokenMetadata = <T extends TokenMetadata>(
   contractAddress: string,
-  tokenId: BigNumber,
-  provider?: ReturnType<typeof getDefaultProvider>
+  tokenId: BigNumber
 ): TokenMetadataState<T> => {
+  const provider = useProvider();
   const contract = useMemo(() => {
     return new Contract(contractAddress, abi, provider);
   }, [contractAddress, provider]);

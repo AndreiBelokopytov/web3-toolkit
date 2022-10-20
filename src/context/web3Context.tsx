@@ -1,3 +1,4 @@
+import { getDefaultProvider } from 'ethers';
 import React, { createContext, useContext, useState } from 'react';
 
 const defaultChainDict: Record<string, string> = {
@@ -8,10 +9,13 @@ const defaultChainDict: Record<string, string> = {
   '0x2a': 'Kovan'
 };
 
+type BaseProvider = ReturnType<typeof getDefaultProvider>;
+
 export type Web3Context = {
   address?: string;
   chainId?: string;
   chainDict: Record<string, string>;
+  provider?: BaseProvider;
   setAddress: (address: string | undefined) => void;
   setChainId: (chainID: string | undefined) => void;
 };
@@ -22,7 +26,7 @@ const Web3Context = createContext<Web3Context>({
   chainDict: defaultChainDict
 });
 
-type Props = Pick<Web3Context, 'address' | 'chainId'> & {
+type Props = Pick<Web3Context, 'address' | 'chainId' | 'provider'> & {
   chainDict?: Record<string, string>;
   children: React.ReactNode;
 };
@@ -31,6 +35,7 @@ export const Web3Provider = ({
   children,
   address: initialAddress,
   chainId: initialChainId,
+  provider,
   chainDict = {}
 }: Props) => {
   const [address, setAddress] = useState<string | undefined>(initialAddress);
@@ -41,6 +46,7 @@ export const Web3Provider = ({
     chainId,
     setAddress,
     setChainId,
+    provider,
     chainDict: { ...defaultChainDict, ...chainDict }
   };
 

@@ -3,11 +3,12 @@ import { formatEther } from 'ethers/lib/utils';
 import { ComponentMeta } from '@storybook/react';
 import React from 'react';
 import { useTokenBalance } from '../hooks';
+import { Web3Provider } from '../context';
 
 const ERC20_TOKEN_ADDRESS = '0x51f44ca59b867E005e48FA573Cb8df83FC7f7597';
 const OWNER_ADDRESS = '0x797D19711fB4a4363AFc6fdc5070097485708ee9';
 
-const provider = new ethers.providers.AlchemyProvider(
+const alchemyProvider = new ethers.providers.AlchemyProvider(
   'goerli',
   process.env.ALCHEMY_API_KEY
 );
@@ -18,11 +19,7 @@ type Props = {
 };
 
 const TokenBalance = ({ tokenAddress, ownerAddress }: Props) => {
-  const { balance, isLoading } = useTokenBalance(
-    tokenAddress,
-    ownerAddress,
-    provider
-  );
+  const { balance, isLoading } = useTokenBalance(tokenAddress, ownerAddress);
 
   return (
     <>
@@ -38,6 +35,15 @@ const TokenBalance = ({ tokenAddress, ownerAddress }: Props) => {
   );
 };
 
+const App = () => (
+  <Web3Provider provider={alchemyProvider}>
+    <TokenBalance
+      tokenAddress={ERC20_TOKEN_ADDRESS}
+      ownerAddress={OWNER_ADDRESS}
+    />
+  </Web3Provider>
+);
+
 export default {
   title: 'TokenBalance',
   component: TokenBalance
@@ -45,10 +51,7 @@ export default {
 
 export const ERC20Story = () => (
   <div className='preview'>
-    <TokenBalance
-      tokenAddress={ERC20_TOKEN_ADDRESS}
-      ownerAddress={OWNER_ADDRESS}
-    />
+    <App />
   </div>
 );
 ERC20Story.storyName = 'ERC20 token balance';
