@@ -47,7 +47,7 @@ const alchemyProvider = new ethers.providers.AlchemyProvider(
 2. Use components and hooks:
 
 ```typescript
-import { Address, useMetaMaks, useAddress, useChain } from 'web3-toolkit-react';
+import { Address, useMetaMask, useAddress, useChain } from 'web3-toolkit-react';
 
 const App = () => {
   const { status, error, connect } = useMetaMask();
@@ -63,8 +63,6 @@ const App = () => {
   );
 };
 ```
-
-See examples of usage in the `stories` folder.
 
 ## License
 
