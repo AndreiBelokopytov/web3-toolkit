@@ -1,7 +1,9 @@
 import {jsx as $h1OuD$jsx} from "react/jsx-runtime";
-import $h1OuD$react, {createContext as $h1OuD$createContext, useState as $h1OuD$useState, useContext as $h1OuD$useContext, useRef as $h1OuD$useRef, useCallback as $h1OuD$useCallback, useEffect as $h1OuD$useEffect, useMemo as $h1OuD$useMemo} from "react";
+import $h1OuD$react, {memo as $h1OuD$memo, createContext as $h1OuD$createContext, useState as $h1OuD$useState, useContext as $h1OuD$useContext, useRef as $h1OuD$useRef, useCallback as $h1OuD$useCallback, useEffect as $h1OuD$useEffect, useMemo as $h1OuD$useMemo} from "react";
+import {formatUnits as $h1OuD$formatUnits} from "ethers/lib/utils";
+import {assert as $h1OuD$assert} from "console";
+import {getDefaultProvider as $h1OuD$getDefaultProvider, Contract as $h1OuD$Contract, BigNumber as $h1OuD$BigNumber} from "ethers";
 import $h1OuD$metamaskonboarding from "@metamask/onboarding";
-import {Contract as $h1OuD$Contract, BigNumber as $h1OuD$BigNumber} from "ethers";
 
 function $parcel$exportWildcard(dest, source) {
   Object.keys(source).forEach(function(key) {
@@ -44,29 +46,60 @@ function $46ace6a8ad08831d$var$shortenAddress(address, substrLength = $46ace6a8a
 $parcel$exportWildcard($3bf0e81424fa74e3$exports, $46ace6a8ad08831d$exports);
 
 
+var $be0b80c7d092986b$exports = {};
+var $c8c6171bf842faa5$exports = {};
+
+$parcel$export($c8c6171bf842faa5$exports, "Balance", () => $c8c6171bf842faa5$export$276e99f8b64146b2);
+
+
+
+
+const $c8c6171bf842faa5$var$DEFAULT_UNITS = 18;
+const $c8c6171bf842faa5$export$276e99f8b64146b2 = /*#__PURE__*/ (0, $h1OuD$memo)(({ value: value , units: units = $c8c6171bf842faa5$var$DEFAULT_UNITS , fractionDigits: fractionDigits  })=>{
+    (0, $h1OuD$assert)(fractionDigits === undefined || fractionDigits > 0 && fractionDigits < units);
+    let formattedValue = (0, $h1OuD$formatUnits)(value, units);
+    const fraction = formattedValue.split(".")[1];
+    if (fractionDigits && fraction.length > fractionDigits) formattedValue = formattedValue.slice(0, formattedValue.length - fraction.length + fractionDigits);
+    return /*#__PURE__*/ (0, $h1OuD$jsx)("span", {
+        children: formattedValue
+    });
+});
+
+
+$parcel$exportWildcard($be0b80c7d092986b$exports, $c8c6171bf842faa5$exports);
+
+
 $parcel$exportWildcard($46914435460bb52d$exports, $3bf0e81424fa74e3$exports);
+$parcel$exportWildcard($46914435460bb52d$exports, $be0b80c7d092986b$exports);
 
 
-var $ef92e575eb314c48$exports = {};
-var $1fdce9eeb1cdb6b4$exports = {};
+var $5700acf22cb6391e$exports = {};
+var $6e6001b2f043445d$exports = {};
+var $1291230e517cb182$exports = {};
 
-$parcel$export($1fdce9eeb1cdb6b4$exports, "Web3Provider", () => $1fdce9eeb1cdb6b4$export$d05096c9fd9d936d);
-$parcel$export($1fdce9eeb1cdb6b4$exports, "useWeb3Context", () => $1fdce9eeb1cdb6b4$export$80233ff53690030c);
+$parcel$export($1291230e517cb182$exports, "useAddress", () => $1291230e517cb182$export$ac0686965540f22d);
+var $b5bf33355828ad95$exports = {};
+
+$parcel$export($b5bf33355828ad95$exports, "Web3Provider", () => $b5bf33355828ad95$export$d05096c9fd9d936d);
+$parcel$export($b5bf33355828ad95$exports, "useWeb3", () => $b5bf33355828ad95$export$5d39cdc6a2aceb53);
 
 
-const $1fdce9eeb1cdb6b4$var$defaultChainDict = {
+
+const $b5bf33355828ad95$var$defaultChainDict = {
     "0x1": "Mainnet",
     "0x3": "Ropsten",
     "0x4": "Rinkeby",
     "0x5": "Goerli",
     "0x2a": "Kovan"
 };
-const $1fdce9eeb1cdb6b4$var$Web3Context = /*#__PURE__*/ (0, $h1OuD$createContext)({
+const $b5bf33355828ad95$var$defaultProvider = (0, $h1OuD$getDefaultProvider)();
+const $b5bf33355828ad95$var$Web3Context = /*#__PURE__*/ (0, $h1OuD$createContext)({
     setAddress: ()=>null,
     setChainId: ()=>null,
-    chainDict: $1fdce9eeb1cdb6b4$var$defaultChainDict
+    chainDict: $b5bf33355828ad95$var$defaultChainDict,
+    provider: $b5bf33355828ad95$var$defaultProvider
 });
-const $1fdce9eeb1cdb6b4$export$d05096c9fd9d936d = ({ children: children , address: initialAddress , chainId: initialChainId , provider: provider , chainDict: chainDict = {}  })=>{
+const $b5bf33355828ad95$export$d05096c9fd9d936d = ({ children: children , address: initialAddress , chainId: initialChainId , provider: provider = $b5bf33355828ad95$var$defaultProvider , chainDict: chainDict = {}  })=>{
     const [address, setAddress] = (0, $h1OuD$useState)(initialAddress);
     const [chainId, setChainId] = (0, $h1OuD$useState)(initialChainId);
     const context = {
@@ -76,29 +109,20 @@ const $1fdce9eeb1cdb6b4$export$d05096c9fd9d936d = ({ children: children , addres
         setChainId: setChainId,
         provider: provider,
         chainDict: {
-            ...$1fdce9eeb1cdb6b4$var$defaultChainDict,
+            ...$b5bf33355828ad95$var$defaultChainDict,
             ...chainDict
         }
     };
-    return /*#__PURE__*/ (0, $h1OuD$jsx)($1fdce9eeb1cdb6b4$var$Web3Context.Provider, {
+    return /*#__PURE__*/ (0, $h1OuD$jsx)($b5bf33355828ad95$var$Web3Context.Provider, {
         value: context,
         children: children
     });
 };
-const $1fdce9eeb1cdb6b4$export$80233ff53690030c = ()=>(0, $h1OuD$useContext)($1fdce9eeb1cdb6b4$var$Web3Context);
+const $b5bf33355828ad95$export$5d39cdc6a2aceb53 = ()=>(0, $h1OuD$useContext)($b5bf33355828ad95$var$Web3Context);
 
-
-$parcel$exportWildcard($ef92e575eb314c48$exports, $1fdce9eeb1cdb6b4$exports);
-
-
-var $5700acf22cb6391e$exports = {};
-var $6e6001b2f043445d$exports = {};
-var $1291230e517cb182$exports = {};
-
-$parcel$export($1291230e517cb182$exports, "useAddress", () => $1291230e517cb182$export$ac0686965540f22d);
 
 const $1291230e517cb182$export$ac0686965540f22d = ()=>{
-    const { address: address  } = (0, $1fdce9eeb1cdb6b4$export$80233ff53690030c)();
+    const { address: address  } = (0, $b5bf33355828ad95$export$5d39cdc6a2aceb53)();
     return address;
 };
 
@@ -112,7 +136,7 @@ var $b97469360e3d3488$exports = {};
 $parcel$export($b97469360e3d3488$exports, "useChain", () => $b97469360e3d3488$export$a4a17273dffcc09c);
 
 const $b97469360e3d3488$export$a4a17273dffcc09c = ()=>{
-    const { chainId: chainId , chainDict: chainDict  } = (0, $1fdce9eeb1cdb6b4$export$80233ff53690030c)();
+    const { chainId: chainId , chainDict: chainDict  } = (0, $b5bf33355828ad95$export$5d39cdc6a2aceb53)();
     if (!chainId) return undefined;
     const name = chainDict[chainId] ?? "Unknown";
     return {
@@ -131,20 +155,26 @@ var $55abee8d73d3bb4a$exports = {};
 $parcel$export($55abee8d73d3bb4a$exports, "useMetaMask", () => $55abee8d73d3bb4a$export$6f1a648d65fc54a1);
 
 
-var $95ad1495d8d22fad$exports = {};
-var $a7e306555e36ddd8$exports = {};
 
-$parcel$export($a7e306555e36ddd8$exports, "metaMaskProvider", () => $a7e306555e36ddd8$export$621e95380bede4a2);
-const $a7e306555e36ddd8$export$621e95380bede4a2 = window.ethereum;
+const $b03ca379f3c36cfa$export$4e217c25dcf81ae2 = window.ethereum;
 
 
-$parcel$exportWildcard($95ad1495d8d22fad$exports, $a7e306555e36ddd8$exports);
-
+const $c2fb42a9184c50b6$export$82f46aa4e6535a45 = (error)=>{
+    let errorMessage = "Unknown error";
+    if (error instanceof Error) errorMessage = error.message;
+    if (typeof error === "string") errorMessage = error;
+    return errorMessage;
+};
+class $c2fb42a9184c50b6$export$7750cdfb4db2c3d extends Error {
+}
+const $c2fb42a9184c50b6$export$a7a9523472993e97 = (condition, msg)=>{
+    if (!condition) throw new $c2fb42a9184c50b6$export$7750cdfb4db2c3d(msg);
+};
 
 
 function $55abee8d73d3bb4a$export$6f1a648d65fc54a1() {
     const metaMaskOnboarding = (0, $h1OuD$useRef)(new (0, $h1OuD$metamaskonboarding)());
-    const { setAddress: setAddress , setChainId: setChainId  } = (0, $1fdce9eeb1cdb6b4$export$80233ff53690030c)();
+    const { setAddress: setAddress , setChainId: setChainId  } = (0, $b5bf33355828ad95$export$5d39cdc6a2aceb53)();
     const initialState = (0, $h1OuD$metamaskonboarding).isMetaMaskInstalled() ? {
         status: "notConnected"
     } : {
@@ -174,13 +204,13 @@ function $55abee8d73d3bb4a$export$6f1a648d65fc54a1() {
     ]);
     (0, $h1OuD$useEffect)(()=>{
         if ((0, $h1OuD$metamaskonboarding).isMetaMaskInstalled()) {
-            (0, $a7e306555e36ddd8$export$621e95380bede4a2).on("accountsChanged", handleAccountsChanded);
-            (0, $a7e306555e36ddd8$export$621e95380bede4a2).on("chainChanged", handleChainChanged);
+            (0, $b03ca379f3c36cfa$export$4e217c25dcf81ae2).on("accountsChanged", handleAccountsChanded);
+            (0, $b03ca379f3c36cfa$export$4e217c25dcf81ae2).on("chainChanged", handleChainChanged);
         }
         return ()=>{
             if ((0, $h1OuD$metamaskonboarding).isMetaMaskInstalled()) {
-                (0, $a7e306555e36ddd8$export$621e95380bede4a2).removeListener("accountsChanged", handleAccountsChanded);
-                (0, $a7e306555e36ddd8$export$621e95380bede4a2).removeListener("chainChanged", handleChainChanged);
+                (0, $b03ca379f3c36cfa$export$4e217c25dcf81ae2).removeListener("accountsChanged", handleAccountsChanded);
+                (0, $b03ca379f3c36cfa$export$4e217c25dcf81ae2).removeListener("chainChanged", handleChainChanged);
             }
         };
     }, [
@@ -202,22 +232,19 @@ function $55abee8d73d3bb4a$export$6f1a648d65fc54a1() {
                 error: undefined
             }));
         try {
-            const accounts = await (0, $a7e306555e36ddd8$export$621e95380bede4a2).request({
+            const accounts = await (0, $b03ca379f3c36cfa$export$4e217c25dcf81ae2).request({
                 method: "eth_requestAccounts"
             });
             handleAccountsChanded(accounts);
-            const chainId = await (0, $a7e306555e36ddd8$export$621e95380bede4a2).request({
+            const chainId = await (0, $b03ca379f3c36cfa$export$4e217c25dcf81ae2).request({
                 method: "eth_chainId"
             });
             handleChainChanged(chainId);
         } catch (err) {
-            let message;
-            if (err instanceof Error) message = err?.message;
-            if (typeof err === "string") message = err;
             setOnboardingState((prevState)=>({
                     ...prevState,
                     status: "notConnected",
-                    error: message
+                    error: (0, $c2fb42a9184c50b6$export$82f46aa4e6535a45)(err)
                 }));
         }
     }, [
@@ -277,24 +304,29 @@ $parcel$exportWildcard($fb44dc37b7573206$exports, $55abee8d73d3bb4a$exports);
 $parcel$exportWildcard($fb44dc37b7573206$exports, $4c518f06881b3c31$exports);
 
 
-var $80d717538ad2e1e9$exports = {};
-var $9cfbd30380651811$exports = {};
-
-$parcel$export($9cfbd30380651811$exports, "useTokenBalance", () => $9cfbd30380651811$export$c79c82fb94eb75b4);
-
-
 var $919486e51744d371$exports = {};
 var $7c49c323774941e5$exports = {};
 
 $parcel$export($7c49c323774941e5$exports, "useProvider", () => $7c49c323774941e5$export$693cdb10cec23617);
+var $95ad1495d8d22fad$exports = {};
+
+$parcel$exportWildcard($95ad1495d8d22fad$exports, $b5bf33355828ad95$exports);
+
 
 const $7c49c323774941e5$export$693cdb10cec23617 = ()=>{
-    const { provider: provider  } = (0, $1fdce9eeb1cdb6b4$export$80233ff53690030c)();
+    const { provider: provider  } = (0, $b5bf33355828ad95$export$5d39cdc6a2aceb53)();
     return provider;
 };
 
 
 $parcel$exportWildcard($919486e51744d371$exports, $7c49c323774941e5$exports);
+
+
+var $80d717538ad2e1e9$exports = {};
+var $9cfbd30380651811$exports = {};
+
+$parcel$export($9cfbd30380651811$exports, "useTokenBalance", () => $9cfbd30380651811$export$c79c82fb94eb75b4);
+
 
 
 const $9cfbd30380651811$var$abi = [
@@ -354,16 +386,63 @@ const $9cfbd30380651811$export$c79c82fb94eb75b4 = (contractAddress, address)=>{
 $parcel$exportWildcard($80d717538ad2e1e9$exports, $9cfbd30380651811$exports);
 
 
+var $049ac9de6abc74c7$exports = {};
+var $6f864d5f96b5a0b3$exports = {};
 
-$parcel$exportWildcard($5700acf22cb6391e$exports, $6e6001b2f043445d$exports);
-$parcel$exportWildcard($5700acf22cb6391e$exports, $800d14b319126306$exports);
+$parcel$export($6f864d5f96b5a0b3$exports, "useWalletBalance", () => $6f864d5f96b5a0b3$export$512f6b8a30d065e1);
+
+
+
+
+const $6f864d5f96b5a0b3$export$512f6b8a30d065e1 = (address)=>{
+    const [state, setState] = (0, $h1OuD$useState)({
+        balance: (0, $h1OuD$BigNumber).from(0),
+        isLoading: false
+    });
+    const provider = (0, $7c49c323774941e5$export$693cdb10cec23617)();
+    (0, $h1OuD$useEffect)(()=>{
+        (async function fetchBalance() {
+            setState((prevState)=>({
+                    ...prevState,
+                    isLoading: true,
+                    error: undefined
+                }));
+            try {
+                const balance = await provider.getBalance(address);
+                setState((prevState)=>({
+                        ...prevState,
+                        balance: balance,
+                        isLoading: false
+                    }));
+            } catch (err) {
+                setState((prevState)=>({
+                        ...prevState,
+                        isLoading: false,
+                        error: (0, $c2fb42a9184c50b6$export$82f46aa4e6535a45)(err)
+                    }));
+            }
+        })();
+    }, [
+        address,
+        provider
+    ]);
+    return state;
+};
+
+
+$parcel$exportWildcard($049ac9de6abc74c7$exports, $6f864d5f96b5a0b3$exports);
+
+
 $parcel$exportWildcard($5700acf22cb6391e$exports, $fb44dc37b7573206$exports);
 $parcel$exportWildcard($5700acf22cb6391e$exports, $80d717538ad2e1e9$exports);
+$parcel$exportWildcard($5700acf22cb6391e$exports, $6e6001b2f043445d$exports);
+$parcel$exportWildcard($5700acf22cb6391e$exports, $800d14b319126306$exports);
 $parcel$exportWildcard($5700acf22cb6391e$exports, $919486e51744d371$exports);
+$parcel$exportWildcard($5700acf22cb6391e$exports, $049ac9de6abc74c7$exports);
 
 
 
 
 
-export {$46ace6a8ad08831d$export$73974d1f547d9d48 as Address, $1fdce9eeb1cdb6b4$export$d05096c9fd9d936d as Web3Provider, $1fdce9eeb1cdb6b4$export$80233ff53690030c as useWeb3Context, $1291230e517cb182$export$ac0686965540f22d as useAddress, $b97469360e3d3488$export$a4a17273dffcc09c as useChain, $55abee8d73d3bb4a$export$6f1a648d65fc54a1 as useMetaMask, $4c518f06881b3c31$export$ff1cd117057bac38 as OnboardingState, $9cfbd30380651811$export$c79c82fb94eb75b4 as useTokenBalance, $7c49c323774941e5$export$693cdb10cec23617 as useProvider, $a7e306555e36ddd8$export$621e95380bede4a2 as metaMaskProvider};
+export {$46ace6a8ad08831d$export$73974d1f547d9d48 as Address, $c8c6171bf842faa5$export$276e99f8b64146b2 as Balance, $55abee8d73d3bb4a$export$6f1a648d65fc54a1 as useMetaMask, $4c518f06881b3c31$export$ff1cd117057bac38 as OnboardingState, $9cfbd30380651811$export$c79c82fb94eb75b4 as useTokenBalance, $1291230e517cb182$export$ac0686965540f22d as useAddress, $b97469360e3d3488$export$a4a17273dffcc09c as useChain, $7c49c323774941e5$export$693cdb10cec23617 as useProvider, $6f864d5f96b5a0b3$export$512f6b8a30d065e1 as useWalletBalance, $b5bf33355828ad95$export$d05096c9fd9d936d as Web3Provider, $b5bf33355828ad95$export$5d39cdc6a2aceb53 as useWeb3};
 //# sourceMappingURL=module.js.map
