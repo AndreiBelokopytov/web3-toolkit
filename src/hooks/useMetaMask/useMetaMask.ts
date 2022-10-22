@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import MetaMaskOnboarding from '@metamask/onboarding';
-import { metaMaskProvider } from '../../providers';
-import { useWeb3Context } from '../../context/web3Context';
+import { useWeb3 } from '../../providers/Web3Provider';
+import { metaMask } from './metaMask';
+import { getErrorMessage } from '../../utils';
 
 export type OnBoardingStateStatus =
   | 'notInstalled'
@@ -28,7 +29,7 @@ export function useMetaMask(): Result {
   const metaMaskOnboarding = useRef<MetaMaskOnboarding>(
     new MetaMaskOnboarding()
   );
-  const { setAddress, setChainId } = useWeb3Context();
+  const { setAddress, setChainId } = useWeb3();
 
   const initialState: OnboardingState = MetaMaskOnboarding.isMetaMaskInstalled()
     ? {
@@ -69,17 +70,14 @@ export function useMetaMask(): Result {
 
   useEffect(() => {
     if (MetaMaskOnboarding.isMetaMaskInstalled()) {
-      metaMaskProvider.on('accountsChanged', handleAccountsChanded);
-      metaMaskProvider.on('chainChanged', handleChainChanged);
+      metaMask.on('accountsChanged', handleAccountsChanded);
+      metaMask.on('chainChanged', handleChainChanged);
     }
 
     return () => {
       if (MetaMaskOnboarding.isMetaMaskInstalled()) {
-        metaMaskProvider.removeListener(
-          'accountsChanged',
-          handleAccountsChanded
-        );
-        metaMaskProvider.removeListener('chainChanged', handleChainChanged);
+        metaMask.removeListener('accountsChanged', handleAccountsChanded);
+        metaMask.removeListener('chainChanged', handleChainChanged);
       }
     };
   }, [handleAccountsChanded, handleChainChanged]);
@@ -100,26 +98,19 @@ export function useMetaMask(): Result {
       error: undefined
     }));
     try {
-      const accounts = await metaMaskProvider.request({
+      const accounts = await metaMask.request({
         method: 'eth_requestAccounts'
       });
       handleAccountsChanded(accounts);
-      const chainId = await metaMaskProvider.request({
+      const chainId = await metaMask.request({
         method: 'eth_chainId'
       });
       handleChainChanged(chainId);
     } catch (err) {
-      let message: string | undefined;
-      if (err instanceof Error) {
-        message = err?.message;
-      }
-      if (typeof err === 'string') {
-        message = err;
-      }
       setOnboardingState((prevState) => ({
         ...prevState,
         status: 'notConnected',
-        error: message
+        error: getErrorMessage(err)
       }));
     }
   }, [handleAccountsChanded, handleChainChanged]);

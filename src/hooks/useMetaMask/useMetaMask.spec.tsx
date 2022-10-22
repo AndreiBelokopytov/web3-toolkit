@@ -2,19 +2,19 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { useMetaMask } from './useMetaMask';
 import MetaMaskOnboarding from '@metamask/onboarding';
-import { metaMaskProvider } from '../../providers/metaMaskProvider';
+import { metaMask } from './metaMask';
 import '@testing-library/jest-dom/extend-expect';
 import { useAddress } from '../useAddress';
 import { useChain } from '../useChain';
-import { Web3Provider } from '../../context/web3Context';
+import { Web3Provider } from '../../providers/Web3Provider';
 
 const ETH_ADDRESS = '0x965B7A773e3632b259108d246A7Cfdcdff118999';
 const CHAIN_ID = 'goerli';
 
 jest.mock('@metamask/onboarding');
-jest.mock('../../providers/metaMaskProvider', () => {
+jest.mock('./metaMask', () => {
   return {
-    metaMaskProvider: {
+    metaMask: {
       request: jest.fn(),
       on() {},
       removeListener() {}
@@ -46,7 +46,7 @@ describe('useMetaMask', () => {
   beforeEach(() => {
     jest.resetModules();
     // @ts-ignore
-    metaMaskProvider.request.mockImplementation(
+    metaMask.request.mockImplementation(
       ({ method: methodName }: { method: string }) => {
         switch (methodName) {
           case 'eth_requestAccounts':
@@ -73,7 +73,7 @@ describe('useMetaMask', () => {
     //@ts-ignore
     MetaMaskOnboarding.isMetaMaskInstalled.mockReturnValue(true);
     //@ts-ignore
-    metaMaskProvider.request.mockImplementation(() => {
+    metaMask.request.mockImplementation(() => {
       return new Promise((resolve) => setTimeout(() => resolve([]), 200));
     });
     render(<App />);
@@ -132,7 +132,7 @@ describe('useMetaMask', () => {
     //@ts-ignore
     MetaMaskOnboarding.isMetaMaskInstalled.mockReturnValue(true);
     //@ts-ignore
-    metaMaskProvider.request.mockImplementation(() => {
+    metaMask.request.mockImplementation(() => {
       throw new Error('Unknown error');
     });
     render(<App />);

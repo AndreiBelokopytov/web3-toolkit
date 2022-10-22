@@ -1,1 +1,1 @@
-export * from './metaMaskProvider';
+export * from './Web3Provider';

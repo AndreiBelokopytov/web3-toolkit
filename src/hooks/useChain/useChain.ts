@@ -1,4 +1,4 @@
-import { useWeb3Context } from '../../context/web3Context';
+import { useWeb3 } from '../../providers/Web3Provider';
 
 type Chain = {
   id: string;
@@ -6,7 +6,7 @@ type Chain = {
 };
 
 export const useChain = (): Chain | undefined => {
-  const { chainId, chainDict } = useWeb3Context();
+  const { chainId, chainDict } = useWeb3();
 
   if (!chainId) {
     return undefined;

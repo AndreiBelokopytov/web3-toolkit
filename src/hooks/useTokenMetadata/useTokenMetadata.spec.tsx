@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { BigNumber, Contract } from 'ethers';
 import React from 'react';
-import { Web3Provider } from '../../context';
+import { Web3Provider } from '../../providers';
 import { useTokenMetadata } from './useTokenMetadata';
 import '@testing-library/jest-dom/extend-expect';
 
