@@ -21,4 +21,16 @@ describe('Balance', () => {
     render(<Balance value={BALANCE} units={20} fractionDigits={4} />);
     expect(screen.queryByText('1.1122')).toBeInTheDocument();
   });
+
+  it('throws an error if fraction digits is less than 0', () => {
+    expect(() =>
+      render(<Balance value={BALANCE} units={20} fractionDigits={-1} />)
+    ).toThrow();
+  });
+
+  it('throws an error if fraction digits is greater than units', () => {
+    expect(() =>
+      render(<Balance value={BALANCE} fractionDigits={20} />)
+    ).toThrow();
+  });
 });

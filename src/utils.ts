@@ -11,8 +11,11 @@ export const getErrorMessage = (error: unknown): string => {
 
 export class AssertionError extends Error {}
 
-export const assert = (condition: any, msg?: string): asserts condition => {
+export function assert(
+  condition: boolean,
+  msg?: string
+): asserts condition is true {
   if (!condition) {
     throw new AssertionError(msg);
   }
-};
+}
