@@ -2,40 +2,28 @@ import React from 'react';
 import { Web3Provider } from '../../providers';
 import { useWalletBalance } from './useWalletBalance';
 import { render, screen, waitFor } from '@testing-library/react';
-import { BigNumber, getDefaultProvider } from 'ethers';
+import { BigNumber } from 'ethers';
 import '@testing-library/jest-dom/extend-expect';
 import { BaseProvider } from '../../types';
 
 const ETH_ADDRESS = '0x965B7A773e3632b259108d246A7Cfdcdff118999';
 const BALANCE = '1000000000000000000';
 
-jest.mock('ethers', () => {
-  const ethers = jest.requireActual('ethers');
-  return {
-    ...ethers,
-    getDefaultProvider: jest.fn().mockImplementation(() => {
-      return {
-        getBalance() {
-          return Promise.resolve(ethers.BigNumber.from(BALANCE));
-        }
-      };
-    })
-  };
-});
+let provider: BaseProvider;
 
 const WalletBalance = () => {
   const { balance, isLoading, error } = useWalletBalance(ETH_ADDRESS);
   return (
     <>
-      <div data-testid='balance'>{balance.toString()}</div>
+      <div data-testid='balance'>{balance?.toString()}</div>
       <div data-testid='loading'>{isLoading && <span>loading</span>}</div>
       <div data-testid='error'>{error}</div>
     </>
   );
 };
 
-const App = (props: { provider?: BaseProvider }) => (
-  <Web3Provider provider={props.provider}>
+const App = () => (
+  <Web3Provider provider={provider}>
     <WalletBalance />
   </Web3Provider>
 );
@@ -49,10 +37,21 @@ const getElementsToTest = () => {
 };
 
 describe('useWalletBalance', () => {
-  it('returns zero balance when loading', () => {
+  beforeEach(() => {
+    //@ts-ignore
+    provider = {
+      getBalance: jest
+        .fn()
+        .mockImplementation(() => Promise.resolve(BigNumber.from(BALANCE))),
+      on: jest.fn(),
+      off: jest.fn()
+    };
+  });
+
+  it('initially returns undefined balance', () => {
     render(<App />);
     const [balance, loading, error] = getElementsToTest();
-    expect(balance).toHaveTextContent(BigNumber.from(0).toString());
+    expect(balance).toBeEmptyDOMElement();
     expect(loading).not.toBeEmptyDOMElement();
     expect(error).toBeEmptyDOMElement();
   });
@@ -67,20 +66,15 @@ describe('useWalletBalance', () => {
     });
   });
 
-  it('returns an error and zero balance if an error occurs', async () => {
+  it('returns an error if an error occurs', async () => {
     //@ts-ignore
-    getDefaultProvider.mockImplementation(() => {
-      return {
-        getBalance() {
-          throw new Error('unknown error');
-        }
-      };
+    provider.getBalance.mockImplementation(() => {
+      throw new Error('unknown error');
     });
-    const provider = getDefaultProvider();
-    render(<App provider={provider} />);
+    render(<App />);
     await waitFor(() => {
       const [balance, loading, error] = getElementsToTest();
-      expect(balance).toHaveTextContent(BigNumber.from(0).toString());
+      expect(balance).toBeEmptyDOMElement();
       expect(loading).toBeEmptyDOMElement();
       expect(error).not.toBeEmptyDOMElement();
     });

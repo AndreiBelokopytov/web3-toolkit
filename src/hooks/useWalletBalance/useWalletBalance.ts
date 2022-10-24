@@ -1,44 +1,52 @@
 import { BigNumber } from 'ethers';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { getErrorMessage } from '../../utils';
 import { useProvider } from '../useProvider';
 
 type State = {
-  balance: BigNumber;
+  balance?: BigNumber;
   isLoading: boolean;
   error?: string;
 };
 
 export const useWalletBalance = (address: string): State => {
   const [state, setState] = useState<State>({
-    balance: BigNumber.from(0),
     isLoading: false
   });
   const provider = useProvider();
 
-  useEffect(() => {
-    (async function fetchBalance() {
+  const fetchBalance = useCallback(async () => {
+    setState((prevState) => ({
+      ...prevState,
+      isLoading: true,
+      error: undefined
+    }));
+    try {
+      const balance = await provider.getBalance(address);
       setState((prevState) => ({
         ...prevState,
-        isLoading: true,
-        error: undefined
+        balance,
+        isLoading: false
       }));
-      try {
-        const balance = await provider.getBalance(address);
-        setState((prevState) => ({
-          ...prevState,
-          balance,
-          isLoading: false
-        }));
-      } catch (err) {
-        setState((prevState) => ({
-          ...prevState,
-          isLoading: false,
-          error: getErrorMessage(err)
-        }));
-      }
-    })();
+    } catch (err) {
+      setState((prevState) => ({
+        ...prevState,
+        isLoading: false,
+        error: getErrorMessage(err)
+      }));
+    }
   }, [address, provider]);
+
+  useEffect(() => {
+    fetchBalance();
+  }, [fetchBalance]);
+
+  useEffect(() => {
+    provider.on('block', fetchBalance);
+    return () => {
+      provider.off('block', fetchBalance);
+    };
+  }, [provider, fetchBalance]);
 
   return state;
 };
