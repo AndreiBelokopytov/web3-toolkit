@@ -9,7 +9,14 @@ type State = {
   error?: string;
 };
 
-export const useWalletBalance = (address: string): State => {
+type Options = {
+  refreshOnBlock?: boolean;
+};
+
+export const useWalletBalance = (
+  address: string,
+  { refreshOnBlock }: Options | undefined = {}
+): State => {
   const [state, setState] = useState<State>({
     isLoading: false
   });
@@ -42,11 +49,15 @@ export const useWalletBalance = (address: string): State => {
   }, [fetchBalance]);
 
   useEffect(() => {
-    provider.on('block', fetchBalance);
+    if (refreshOnBlock) {
+      provider.on('block', fetchBalance);
+    }
     return () => {
-      provider.off('block', fetchBalance);
+      if (refreshOnBlock) {
+        provider.off('block', fetchBalance);
+      }
     };
-  }, [provider, fetchBalance]);
+  }, [provider, fetchBalance, refreshOnBlock]);
 
   return state;
 };
