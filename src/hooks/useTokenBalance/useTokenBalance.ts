@@ -1,14 +1,19 @@
 import { BigNumber, Contract } from 'ethers';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { getErrorMessage } from '../../utils';
 import { useProvider } from '../useProvider';
 
-type TokenBalanceState = {
-  balance: BigNumber;
+type State = {
+  balance?: BigNumber;
   isLoading: boolean;
   error?: string;
 };
 
-type TokenBalance = TokenBalanceState & {
+type Options = {
+  refreshOnTransfer?: boolean;
+};
+
+type TokenBalance = State & {
   refresh: () => void;
 };
 
@@ -16,15 +21,23 @@ const abi = ['function balanceOf(address owner) view returns (uint256)'];
 
 export const useTokenBalance = (
   contractAddress: string,
-  address: string
+  address: string,
+  { refreshOnTransfer }: Options | undefined = {}
 ): TokenBalance => {
   const provider = useProvider();
   const contract = useMemo(() => {
     return new Contract(contractAddress, abi, provider);
   }, [contractAddress, provider]);
+  const filterTransferTo = useMemo(
+    () => contract.filters.Transfer(null, address),
+    [contract, address]
+  );
+  const filterTransferFrom = useMemo(
+    () => contract.filters.Transfer(address),
+    [contract, address]
+  );
 
-  const [state, setState] = useState<TokenBalanceState>({
-    balance: BigNumber.from(0),
+  const [state, setState] = useState<State>({
     isLoading: true
   });
 
@@ -42,17 +55,10 @@ export const useTokenBalance = (
         isLoading: false
       }));
     } catch (err) {
-      let errorMessage: string | undefined;
-      if (err instanceof Error) {
-        errorMessage = err.message;
-      }
-      if (typeof err === 'string') {
-        errorMessage = err;
-      }
       setState((prevState) => ({
         ...prevState,
         isLoading: false,
-        error: errorMessage
+        error: getErrorMessage(err)
       }));
     }
   }, [address, contract]);
@@ -60,6 +66,26 @@ export const useTokenBalance = (
   useEffect(() => {
     refresh();
   }, [refresh]);
+
+  useEffect(() => {
+    if (refreshOnTransfer) {
+      contract.on(filterTransferTo, refresh);
+      contract.on(filterTransferFrom, refresh);
+    }
+
+    return () => {
+      if (refreshOnTransfer) {
+        contract.off(filterTransferTo, refresh);
+        contract.off(filterTransferFrom, refresh);
+      }
+    };
+  }, [
+    contract,
+    filterTransferTo,
+    filterTransferFrom,
+    refreshOnTransfer,
+    refresh
+  ]);
 
   return { ...state, refresh };
 };
