@@ -1,7 +1,7 @@
-import { BigNumber, Contract } from 'ethers';
+import { BigNumber } from 'ethers';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getErrorMessage } from '../../utils';
-import { useProvider } from '../useProvider';
+import { useContract } from '../useContract';
 
 type State = {
   balance?: BigNumber;
@@ -24,10 +24,7 @@ export const useTokenBalance = (
   address: string,
   { refreshOnTransfer }: Options | undefined = {}
 ): TokenBalance => {
-  const provider = useProvider();
-  const contract = useMemo(() => {
-    return new Contract(contractAddress, abi, provider);
-  }, [contractAddress, provider]);
+  const contract = useContract(contractAddress, abi);
   const filterTransferTo = useMemo(
     () => contract.filters.Transfer(null, address),
     [contract, address]

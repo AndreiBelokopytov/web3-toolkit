@@ -1,8 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { useMetaMask } from './useMetaMask';
-import MetaMaskOnboarding from '@metamask/onboarding';
-import { metaMask } from './metaMask';
+import { isMetaMaskInstalled, metaMask } from '../../walletApi';
 import '@testing-library/jest-dom/extend-expect';
 import { useAddress } from '../useAddress';
 import { useChain } from '../useChain';
@@ -11,14 +10,16 @@ import { Web3Provider } from '../../providers/Web3Provider';
 const ETH_ADDRESS = '0x965B7A773e3632b259108d246A7Cfdcdff118999';
 const CHAIN_ID = 'goerli';
 
-jest.mock('@metamask/onboarding');
-jest.mock('./metaMask', () => {
+jest.mock('../../walletApi', () => {
   return {
     metaMask: {
       request: jest.fn(),
-      on() {},
-      removeListener() {}
-    }
+      on: jest.fn(),
+      removeListener: jest.fn()
+    },
+    startOnboarding: jest.fn(),
+    stopOnboarding: jest.fn(),
+    isMetaMaskInstalled: jest.fn().mockImplementation(() => true)
   };
 });
 
@@ -64,14 +65,14 @@ describe('useMetaMask', () => {
 
   it('has "notInstalled" state if MetaMask is not installed', () => {
     //@ts-ignore
-    MetaMaskOnboarding.isMetaMaskInstalled.mockReturnValue(false);
+    isMetaMaskInstalled.mockReturnValue(false);
     render(<App />);
     expect(screen.getByRole('button')).toHaveTextContent('notInstalled');
   });
 
   it('has "notConnected" state if empty account list given', async () => {
     //@ts-ignore
-    MetaMaskOnboarding.isMetaMaskInstalled.mockReturnValue(true);
+    isMetaMaskInstalled.mockReturnValue(true);
     //@ts-ignore
     metaMask.request.mockImplementation(() => {
       return new Promise((resolve) => setTimeout(() => resolve([]), 200));
@@ -86,14 +87,14 @@ describe('useMetaMask', () => {
 
   it('has "notConnected" state if MetaMask is installed', () => {
     //@ts-ignore
-    MetaMaskOnboarding.isMetaMaskInstalled.mockReturnValue(true);
+    isMetaMaskInstalled.mockReturnValue(true);
     render(<App />);
     expect(screen.getByRole('button')).toHaveTextContent('notConnected');
   });
 
   it('has "connecting" state when button clicked if MetaMask is installed', async () => {
     //@ts-ignore
-    MetaMaskOnboarding.isMetaMaskInstalled.mockReturnValue(true);
+    isMetaMaskInstalled.mockReturnValue(true);
     render(<App />);
     fireEvent.click(screen.getByRole('button'));
     await waitFor(async () => {
@@ -104,7 +105,7 @@ describe('useMetaMask', () => {
 
   it('has "onboarding" state when button clicked if MetaMask is not installed', async () => {
     //@ts-ignore
-    MetaMaskOnboarding.isMetaMaskInstalled.mockReturnValue(false);
+    isMetaMaskInstalled.mockReturnValue(false);
     render(<App />);
     fireEvent.click(screen.getByRole('button'));
 
@@ -116,7 +117,7 @@ describe('useMetaMask', () => {
 
   it('has "connected" state and sets address and chainId when MetaMask is connected', async () => {
     //@ts-ignore
-    MetaMaskOnboarding.isMetaMaskInstalled.mockReturnValue(true);
+    isMetaMaskInstalled.mockReturnValue(true);
     //@ts-ignore
     render(<App />);
     fireEvent.click(screen.getByRole('button'));
@@ -130,7 +131,7 @@ describe('useMetaMask', () => {
 
   it('has "notConnected" state and error message if "request" method throws an error', async () => {
     //@ts-ignore
-    MetaMaskOnboarding.isMetaMaskInstalled.mockReturnValue(true);
+    isMetaMaskInstalled.mockReturnValue(true);
     //@ts-ignore
     metaMask.request.mockImplementation(() => {
       throw new Error('Unknown error');

@@ -1,7 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import MetaMaskOnboarding from '@metamask/onboarding';
+import { useCallback, useEffect, useState } from 'react';
 import { useWeb3 } from '../../providers/Web3Provider';
-import { metaMask } from './metaMask';
+import {
+  metaMask,
+  startOnboarding,
+  stopOnboarding,
+  isMetaMaskInstalled
+} from '../../walletApi';
 import { getErrorMessage } from '../../utils';
 
 export type OnBoardingStateStatus =
@@ -26,12 +30,9 @@ type Result = OnboardingState & {
 };
 
 export function useMetaMask(): Result {
-  const metaMaskOnboarding = useRef<MetaMaskOnboarding>(
-    new MetaMaskOnboarding()
-  );
   const { setAddress, setChainId } = useWeb3();
 
-  const initialState: OnboardingState = MetaMaskOnboarding.isMetaMaskInstalled()
+  const initialState: OnboardingState = isMetaMaskInstalled(metaMask)
     ? {
         status: 'notConnected'
       }
@@ -58,7 +59,7 @@ export function useMetaMask(): Result {
         setAddress(undefined);
       }
 
-      metaMaskOnboarding.current?.stopOnboarding();
+      stopOnboarding();
     },
     [setAddress]
   );
@@ -69,13 +70,13 @@ export function useMetaMask(): Result {
   );
 
   useEffect(() => {
-    if (MetaMaskOnboarding.isMetaMaskInstalled()) {
+    if (isMetaMaskInstalled(metaMask)) {
       metaMask.on('accountsChanged', handleAccountsChanded);
       metaMask.on('chainChanged', handleChainChanged);
     }
 
     return () => {
-      if (MetaMaskOnboarding.isMetaMaskInstalled()) {
+      if (isMetaMaskInstalled(metaMask)) {
         metaMask.removeListener('accountsChanged', handleAccountsChanded);
         metaMask.removeListener('chainChanged', handleChainChanged);
       }
@@ -83,12 +84,12 @@ export function useMetaMask(): Result {
   }, [handleAccountsChanded, handleChainChanged]);
 
   const connect = useCallback(async () => {
-    if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
+    if (!isMetaMaskInstalled(metaMask)) {
       setOnboardingState((prevState) => ({
         ...prevState,
         status: 'onboarding'
       }));
-      metaMaskOnboarding.current?.startOnboarding();
+      startOnboarding();
       return;
     }
 
