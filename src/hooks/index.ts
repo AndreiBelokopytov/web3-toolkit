@@ -5,4 +5,5 @@ export * from './useMetaMask';
 export * from './useProvider';
 export * from './useSigner';
 export * from './useTokenBalance';
+export * from './useTokenMetadata';
 export * from './useWalletBalance';
