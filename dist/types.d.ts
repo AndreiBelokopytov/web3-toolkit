@@ -1,5 +1,5 @@
 import React from "react";
-import { BigNumber, BigNumberish, getDefaultProvider } from "ethers";
+import { BigNumber, BigNumberish, getDefaultProvider, Signer, providers, Contract, ContractInterface } from "ethers";
 type Props = {
     children: string;
     substrLength?: number;
@@ -11,27 +11,32 @@ type _Props1 = {
     fractionDigits?: number;
 };
 export const Balance: React.MemoExoticComponent<({ value, units, fractionDigits }: _Props1) => JSX.Element>;
-type BaseProvider = ReturnType<typeof getDefaultProvider>;
+export type BaseProvider = ReturnType<typeof getDefaultProvider>;
 export type Web3Context = {
     address?: string;
     chainId?: string;
     chainDict: Record<string, string>;
     provider: BaseProvider;
+    signer?: Signer;
     setAddress: (address: string | undefined) => void;
     setChainId: (chainID: string | undefined) => void;
 };
 export const Web3Context: React.Context<Web3Context>;
-type _Props2 = Partial<Pick<Web3Context, 'address' | 'chainId' | 'provider' | 'chainDict'>> & {
+type _Props2 = Partial<Pick<Web3Context, 'address' | 'chainId' | 'provider' | 'chainDict' | 'signer'>> & {
     children: React.ReactNode;
 };
-export const Web3Provider: ({ children, address: initialAddress, chainId: initialChainId, provider, chainDict }: _Props2) => JSX.Element;
+export const Web3Provider: ({ children, address: initialAddress, chainId: initialChainId, provider, signer, chainDict }: _Props2) => JSX.Element;
 export const useWeb3: () => Web3Context;
 export const useAddress: () => string | undefined;
-type Chain = {
-    id: string;
-    name: string;
-};
-export const useChain: () => Chain | undefined;
+export const useNetwork: () => providers.Network | undefined;
+export const useProvider: () => ReturnType<typeof getDefaultProvider>;
+export const useSigner: () => import("ethers").Signer | undefined;
+export const useContract: (address: string, abi: ContractInterface) => [contract: Contract, connect: () => void];
+declare global {
+    interface Window {
+        ethereum: MetaMask;
+    }
+}
 export type OnBoardingStateStatus = 'notInstalled' | 'notConnected' | 'onboarding' | 'connecting' | 'connected';
 type _OnboardingState1 = {
     status: OnBoardingStateStatus;
@@ -44,6 +49,7 @@ type Result = _OnboardingState1 & {
     isConnecting: boolean;
     isOnboarding: boolean;
     connect: () => void;
+    disconnect: () => void;
 };
 export function useMetaMask(): Result;
 type _OnBoardingStateStatus1 = 'notInstalled' | 'notConnected' | 'onboarding' | 'connecting' | 'connected';
@@ -58,21 +64,37 @@ export const OnboardingState: {
     connecting(): OnboardingState;
     onboarding(): OnboardingState;
 };
-export const useProvider: () => ReturnType<typeof getDefaultProvider>;
-type TokenBalanceState = {
-    balance: BigNumber;
+type State = {
+    balance?: BigNumber;
     isLoading: boolean;
     error?: string;
 };
-type TokenBalance = TokenBalanceState & {
+type Options = {
+    refreshOnTransfer?: boolean;
+};
+type TokenBalance = State & {
     refresh: () => void;
 };
-export const useTokenBalance: (contractAddress: string, address: string) => TokenBalance;
-type State = {
-    balance: BigNumber;
+export const useTokenBalance: (contractAddress: string, address: string, { refreshOnTransfer }?: Options | undefined) => TokenBalance;
+type TokenMetadata = {
+    name: string;
+    description: string;
+    image?: string;
+};
+type TokenMetadataState<T extends TokenMetadata> = {
+    metadata?: T;
     isLoading: boolean;
     error?: string;
 };
-export const useWalletBalance: (address: string) => State;
+export const useTokenMetadata: <T extends TokenMetadata>(contractAddress: string, tokenId: BigNumber) => TokenMetadataState<T>;
+type _State1 = {
+    balance?: BigNumber;
+    isLoading: boolean;
+    error?: string;
+};
+type _Options1 = {
+    refreshOnBlock?: boolean;
+};
+export const useWalletBalance: (address: string, { refreshOnBlock }?: _Options1 | undefined) => _State1;
 
 //# sourceMappingURL=types.d.ts.map

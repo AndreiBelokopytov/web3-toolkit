@@ -1,7 +1,6 @@
 var $adHgb$reactjsxruntime = require("react/jsx-runtime");
 var $adHgb$react = require("react");
 var $adHgb$etherslibutils = require("ethers/lib/utils");
-var $adHgb$console = require("console");
 var $adHgb$ethers = require("ethers");
 var $adHgb$metamaskonboarding = require("@metamask/onboarding");
 
@@ -56,10 +55,22 @@ $parcel$export($85d0f383f98a68e3$exports, "Balance", () => $85d0f383f98a68e3$exp
 
 
 
+const $457495504b5c2d38$export$82f46aa4e6535a45 = (error)=>{
+    let errorMessage = "Unknown error";
+    if (error instanceof Error) errorMessage = error.message;
+    if (typeof error === "string") errorMessage = error;
+    return errorMessage;
+};
+class $457495504b5c2d38$export$7750cdfb4db2c3d extends Error {
+}
+function $457495504b5c2d38$export$a7a9523472993e97(condition, msg) {
+    if (!condition) throw new $457495504b5c2d38$export$7750cdfb4db2c3d(msg);
+}
+
 
 const $85d0f383f98a68e3$var$DEFAULT_UNITS = 18;
 const $85d0f383f98a68e3$export$276e99f8b64146b2 = /*#__PURE__*/ (0, $adHgb$react.memo)(({ value: value , units: units = $85d0f383f98a68e3$var$DEFAULT_UNITS , fractionDigits: fractionDigits  })=>{
-    (0, $adHgb$console.assert)(fractionDigits === undefined || fractionDigits > 0 && fractionDigits < units);
+    (0, $457495504b5c2d38$export$a7a9523472993e97)(fractionDigits === undefined || fractionDigits >= 0 && fractionDigits < units, 'invalid value for the "fractionDigits" attribute');
     let formattedValue = (0, $adHgb$etherslibutils.formatUnits)(value, units);
     const fraction = formattedValue.split(".")[1];
     if (fractionDigits && fraction.length > fractionDigits) formattedValue = formattedValue.slice(0, formattedValue.length - fraction.length + fractionDigits);
@@ -102,7 +113,7 @@ const $fd05b2240cbd4f8f$var$Web3Context = /*#__PURE__*/ (0, $adHgb$react.createC
     chainDict: $fd05b2240cbd4f8f$var$defaultChainDict,
     provider: $fd05b2240cbd4f8f$var$defaultProvider
 });
-const $fd05b2240cbd4f8f$export$d05096c9fd9d936d = ({ children: children , address: initialAddress , chainId: initialChainId , provider: provider = $fd05b2240cbd4f8f$var$defaultProvider , chainDict: chainDict = {}  })=>{
+const $fd05b2240cbd4f8f$export$d05096c9fd9d936d = ({ children: children , address: initialAddress , chainId: initialChainId , provider: provider = $fd05b2240cbd4f8f$var$defaultProvider , signer: signer , chainDict: chainDict = {}  })=>{
     const [address, setAddress] = (0, $adHgb$react.useState)(initialAddress);
     const [chainId, setChainId] = (0, $adHgb$react.useState)(initialChainId);
     const context = {
@@ -111,6 +122,7 @@ const $fd05b2240cbd4f8f$export$d05096c9fd9d936d = ({ children: children , addres
         setAddress: setAddress,
         setChainId: setChainId,
         provider: provider,
+        signer: signer,
         chainDict: {
             ...$fd05b2240cbd4f8f$var$defaultChainDict,
             ...chainDict
@@ -133,23 +145,78 @@ const $b74bd2e9d19bd79e$export$ac0686965540f22d = ()=>{
 $parcel$exportWildcard($56a135bc917291c1$exports, $b74bd2e9d19bd79e$exports);
 
 
-var $51ed8dc16fdb6b1e$exports = {};
-var $a20f1a10da85b3f9$exports = {};
+var $ef7d49319f2771db$exports = {};
+var $0f6b9fdf302597a6$exports = {};
 
-$parcel$export($a20f1a10da85b3f9$exports, "useChain", () => $a20f1a10da85b3f9$export$a4a17273dffcc09c);
+$parcel$export($0f6b9fdf302597a6$exports, "useNetwork", () => $0f6b9fdf302597a6$export$553aaf59afc1a2d8);
 
-const $a20f1a10da85b3f9$export$a4a17273dffcc09c = ()=>{
-    const { chainId: chainId , chainDict: chainDict  } = (0, $fd05b2240cbd4f8f$export$5d39cdc6a2aceb53)();
+
+const $0f6b9fdf302597a6$export$553aaf59afc1a2d8 = ()=>{
+    const { chainId: chainId  } = (0, $fd05b2240cbd4f8f$export$5d39cdc6a2aceb53)();
     if (!chainId) return undefined;
-    const name = chainDict[chainId] ?? "Unknown";
-    return {
-        id: chainId,
-        name: name
-    };
+    return (0, $adHgb$ethers.providers).getNetwork(chainId);
 };
 
 
-$parcel$exportWildcard($51ed8dc16fdb6b1e$exports, $a20f1a10da85b3f9$exports);
+$parcel$exportWildcard($ef7d49319f2771db$exports, $0f6b9fdf302597a6$exports);
+
+
+var $c5eded837e2f2da8$exports = {};
+var $6a4fc3770554f563$exports = {};
+
+$parcel$export($6a4fc3770554f563$exports, "useContract", () => $6a4fc3770554f563$export$5556fed9e469df03);
+
+
+var $ff0d9ec41c5160b1$exports = {};
+var $9f2efcd9dd9f4089$exports = {};
+
+$parcel$export($9f2efcd9dd9f4089$exports, "useProvider", () => $9f2efcd9dd9f4089$export$693cdb10cec23617);
+var $b074651bcad67e82$exports = {};
+
+$parcel$exportWildcard($b074651bcad67e82$exports, $fd05b2240cbd4f8f$exports);
+
+
+const $9f2efcd9dd9f4089$export$693cdb10cec23617 = ()=>{
+    const { provider: provider  } = (0, $fd05b2240cbd4f8f$export$5d39cdc6a2aceb53)();
+    return provider;
+};
+
+
+$parcel$exportWildcard($ff0d9ec41c5160b1$exports, $9f2efcd9dd9f4089$exports);
+
+
+var $fc0409aadd1d83d2$exports = {};
+var $429d9969700ede68$exports = {};
+
+$parcel$export($429d9969700ede68$exports, "useSigner", () => $429d9969700ede68$export$9a227db3d64f1ffd);
+
+const $429d9969700ede68$export$9a227db3d64f1ffd = ()=>{
+    const { signer: signer  } = (0, $fd05b2240cbd4f8f$export$5d39cdc6a2aceb53)();
+    return signer;
+};
+
+
+$parcel$exportWildcard($fc0409aadd1d83d2$exports, $429d9969700ede68$exports);
+
+
+const $6a4fc3770554f563$export$5556fed9e469df03 = (address, abi)=>{
+    const signer = (0, $429d9969700ede68$export$9a227db3d64f1ffd)();
+    const provider = (0, $9f2efcd9dd9f4089$export$693cdb10cec23617)();
+    const [contract, setContract] = (0, $adHgb$react.useState)(new (0, $adHgb$ethers.Contract)(address, abi, provider));
+    const connect = (0, $adHgb$react.useCallback)(()=>{
+        if (signer) setContract(contract.connect(signer));
+    }, [
+        contract,
+        signer
+    ]);
+    return [
+        contract,
+        connect
+    ];
+};
+
+
+$parcel$exportWildcard($c5eded837e2f2da8$exports, $6a4fc3770554f563$exports);
 
 
 var $6aa5989b47ada426$exports = {};
@@ -159,26 +226,21 @@ $parcel$export($7dfaf4cffe76781c$exports, "useMetaMask", () => $7dfaf4cffe76781c
 
 
 
-const $045e64bbf9bdd1a6$export$4e217c25dcf81ae2 = window.ethereum;
+const $198014b093d23cca$var$onboarding = new (0, ($parcel$interopDefault($adHgb$metamaskonboarding)))();
+const $198014b093d23cca$export$4e217c25dcf81ae2 = window.ethereum;
+const $198014b093d23cca$export$bff392e758e98175 = (metaMask)=>{
+    return (0, ($parcel$interopDefault($adHgb$metamaskonboarding))).isMetaMaskInstalled();
+};
+const $198014b093d23cca$export$f171239676c462b6 = ()=>$198014b093d23cca$var$onboarding.startOnboarding();
+const $198014b093d23cca$export$32dda890157e21f6 = ()=>$198014b093d23cca$var$onboarding.stopOnboarding();
 
 
-const $457495504b5c2d38$export$82f46aa4e6535a45 = (error)=>{
-    let errorMessage = "Unknown error";
-    if (error instanceof Error) errorMessage = error.message;
-    if (typeof error === "string") errorMessage = error;
-    return errorMessage;
-};
-class $457495504b5c2d38$export$7750cdfb4db2c3d extends Error {
-}
-const $457495504b5c2d38$export$a7a9523472993e97 = (condition, msg)=>{
-    if (!condition) throw new $457495504b5c2d38$export$7750cdfb4db2c3d(msg);
-};
+
 
 
 function $7dfaf4cffe76781c$export$6f1a648d65fc54a1() {
-    const metaMaskOnboarding = (0, $adHgb$react.useRef)(new (0, ($parcel$interopDefault($adHgb$metamaskonboarding)))());
     const { setAddress: setAddress , setChainId: setChainId  } = (0, $fd05b2240cbd4f8f$export$5d39cdc6a2aceb53)();
-    const initialState = (0, ($parcel$interopDefault($adHgb$metamaskonboarding))).isMetaMaskInstalled() ? {
+    const initialState = (0, $198014b093d23cca$export$bff392e758e98175)((0, $198014b093d23cca$export$4e217c25dcf81ae2)) ? {
         status: "notConnected"
     } : {
         status: "notInstalled"
@@ -198,7 +260,7 @@ function $7dfaf4cffe76781c$export$6f1a648d65fc54a1() {
                 }));
             setAddress(undefined);
         }
-        metaMaskOnboarding.current?.stopOnboarding();
+        (0, $198014b093d23cca$export$32dda890157e21f6)();
     }, [
         setAddress
     ]);
@@ -206,14 +268,14 @@ function $7dfaf4cffe76781c$export$6f1a648d65fc54a1() {
         setChainId
     ]);
     (0, $adHgb$react.useEffect)(()=>{
-        if ((0, ($parcel$interopDefault($adHgb$metamaskonboarding))).isMetaMaskInstalled()) {
-            (0, $045e64bbf9bdd1a6$export$4e217c25dcf81ae2).on("accountsChanged", handleAccountsChanded);
-            (0, $045e64bbf9bdd1a6$export$4e217c25dcf81ae2).on("chainChanged", handleChainChanged);
+        if ((0, $198014b093d23cca$export$bff392e758e98175)((0, $198014b093d23cca$export$4e217c25dcf81ae2))) {
+            (0, $198014b093d23cca$export$4e217c25dcf81ae2).on("accountsChanged", handleAccountsChanded);
+            (0, $198014b093d23cca$export$4e217c25dcf81ae2).on("chainChanged", handleChainChanged);
         }
         return ()=>{
-            if ((0, ($parcel$interopDefault($adHgb$metamaskonboarding))).isMetaMaskInstalled()) {
-                (0, $045e64bbf9bdd1a6$export$4e217c25dcf81ae2).removeListener("accountsChanged", handleAccountsChanded);
-                (0, $045e64bbf9bdd1a6$export$4e217c25dcf81ae2).removeListener("chainChanged", handleChainChanged);
+            if ((0, $198014b093d23cca$export$bff392e758e98175)((0, $198014b093d23cca$export$4e217c25dcf81ae2))) {
+                (0, $198014b093d23cca$export$4e217c25dcf81ae2).removeListener("accountsChanged", handleAccountsChanded);
+                (0, $198014b093d23cca$export$4e217c25dcf81ae2).removeListener("chainChanged", handleChainChanged);
             }
         };
     }, [
@@ -221,12 +283,12 @@ function $7dfaf4cffe76781c$export$6f1a648d65fc54a1() {
         handleChainChanged
     ]);
     const connect = (0, $adHgb$react.useCallback)(async ()=>{
-        if (!(0, ($parcel$interopDefault($adHgb$metamaskonboarding))).isMetaMaskInstalled()) {
+        if (!(0, $198014b093d23cca$export$bff392e758e98175)((0, $198014b093d23cca$export$4e217c25dcf81ae2))) {
             setOnboardingState((prevState)=>({
                     ...prevState,
                     status: "onboarding"
                 }));
-            metaMaskOnboarding.current?.startOnboarding();
+            (0, $198014b093d23cca$export$f171239676c462b6)();
             return;
         }
         setOnboardingState((prevState)=>({
@@ -235,11 +297,11 @@ function $7dfaf4cffe76781c$export$6f1a648d65fc54a1() {
                 error: undefined
             }));
         try {
-            const accounts = await (0, $045e64bbf9bdd1a6$export$4e217c25dcf81ae2).request({
+            const accounts = await (0, $198014b093d23cca$export$4e217c25dcf81ae2).request({
                 method: "eth_requestAccounts"
             });
             handleAccountsChanded(accounts);
-            const chainId = await (0, $045e64bbf9bdd1a6$export$4e217c25dcf81ae2).request({
+            const chainId = await (0, $198014b093d23cca$export$4e217c25dcf81ae2).request({
                 method: "eth_chainId"
             });
             handleChainChanged(chainId);
@@ -254,6 +316,13 @@ function $7dfaf4cffe76781c$export$6f1a648d65fc54a1() {
         handleAccountsChanded,
         handleChainChanged
     ]);
+    const disconnect = (0, $adHgb$react.useCallback)(()=>{
+        handleAccountsChanded([]);
+        handleChainChanged(undefined);
+    }, [
+        handleAccountsChanded,
+        handleChainChanged
+    ]);
     return {
         ...onboardingState,
         isNotInstalled: onboardingState.status === "notInstalled",
@@ -261,7 +330,8 @@ function $7dfaf4cffe76781c$export$6f1a648d65fc54a1() {
         isConnected: onboardingState.status === "connected",
         isConnecting: onboardingState.status === "connecting",
         isOnboarding: onboardingState.status === "onboarding",
-        connect: connect
+        connect: connect,
+        disconnect: disconnect
     };
 }
 
@@ -307,22 +377,6 @@ $parcel$exportWildcard($6aa5989b47ada426$exports, $7dfaf4cffe76781c$exports);
 $parcel$exportWildcard($6aa5989b47ada426$exports, $59830d75f32d61f8$exports);
 
 
-var $ff0d9ec41c5160b1$exports = {};
-var $9f2efcd9dd9f4089$exports = {};
-
-$parcel$export($9f2efcd9dd9f4089$exports, "useProvider", () => $9f2efcd9dd9f4089$export$693cdb10cec23617);
-var $b074651bcad67e82$exports = {};
-
-$parcel$exportWildcard($b074651bcad67e82$exports, $fd05b2240cbd4f8f$exports);
-
-
-const $9f2efcd9dd9f4089$export$693cdb10cec23617 = ()=>{
-    const { provider: provider  } = (0, $fd05b2240cbd4f8f$export$5d39cdc6a2aceb53)();
-    return provider;
-};
-
-
-$parcel$exportWildcard($ff0d9ec41c5160b1$exports, $9f2efcd9dd9f4089$exports);
 
 
 var $f0647d1c2a263569$exports = {};
@@ -335,16 +389,17 @@ $parcel$export($88f989a8bd357839$exports, "useTokenBalance", () => $88f989a8bd35
 const $88f989a8bd357839$var$abi = [
     "function balanceOf(address owner) view returns (uint256)"
 ];
-const $88f989a8bd357839$export$c79c82fb94eb75b4 = (contractAddress, address)=>{
-    const provider = (0, $9f2efcd9dd9f4089$export$693cdb10cec23617)();
-    const contract = (0, $adHgb$react.useMemo)(()=>{
-        return new (0, $adHgb$ethers.Contract)(contractAddress, $88f989a8bd357839$var$abi, provider);
-    }, [
-        contractAddress,
-        provider
+const $88f989a8bd357839$export$c79c82fb94eb75b4 = (contractAddress, address, { refreshOnTransfer: refreshOnTransfer  } = {})=>{
+    const [contract] = (0, $6a4fc3770554f563$export$5556fed9e469df03)(contractAddress, $88f989a8bd357839$var$abi);
+    const filterTransferTo = (0, $adHgb$react.useMemo)(()=>contract.filters.Transfer(null, address), [
+        contract,
+        address
+    ]);
+    const filterTransferFrom = (0, $adHgb$react.useMemo)(()=>contract.filters.Transfer(address), [
+        contract,
+        address
     ]);
     const [state, setState] = (0, $adHgb$react.useState)({
-        balance: (0, $adHgb$ethers.BigNumber).from(0),
         isLoading: true
     });
     const refresh = (0, $adHgb$react.useCallback)(async ()=>{
@@ -361,13 +416,10 @@ const $88f989a8bd357839$export$c79c82fb94eb75b4 = (contractAddress, address)=>{
                     isLoading: false
                 }));
         } catch (err) {
-            let errorMessage;
-            if (err instanceof Error) errorMessage = err.message;
-            if (typeof err === "string") errorMessage = err;
             setState((prevState)=>({
                     ...prevState,
                     isLoading: false,
-                    error: errorMessage
+                    error: (0, $457495504b5c2d38$export$82f46aa4e6535a45)(err)
                 }));
         }
     }, [
@@ -377,6 +429,24 @@ const $88f989a8bd357839$export$c79c82fb94eb75b4 = (contractAddress, address)=>{
     (0, $adHgb$react.useEffect)(()=>{
         refresh();
     }, [
+        refresh
+    ]);
+    (0, $adHgb$react.useEffect)(()=>{
+        if (refreshOnTransfer) {
+            contract.on(filterTransferTo, refresh);
+            contract.on(filterTransferFrom, refresh);
+        }
+        return ()=>{
+            if (refreshOnTransfer) {
+                contract.off(filterTransferTo, refresh);
+                contract.off(filterTransferFrom, refresh);
+            }
+        };
+    }, [
+        contract,
+        filterTransferTo,
+        filterTransferFrom,
+        refreshOnTransfer,
         refresh
     ]);
     return {
@@ -389,6 +459,67 @@ const $88f989a8bd357839$export$c79c82fb94eb75b4 = (contractAddress, address)=>{
 $parcel$exportWildcard($f0647d1c2a263569$exports, $88f989a8bd357839$exports);
 
 
+var $1677d79a02accae2$exports = {};
+var $9ac683317b690db3$exports = {};
+
+$parcel$export($9ac683317b690db3$exports, "useTokenMetadata", () => $9ac683317b690db3$export$9d829cdfbbd34b71);
+
+
+
+const $9ac683317b690db3$var$abi = [
+    "function tokenURI(uint256 tokenId) view returns (string)"
+];
+const $9ac683317b690db3$var$asDataUrl = (url)=>{
+    const found = url.match(/^data:application\/json;base64,(.+)/);
+    return found?.[1];
+};
+const $9ac683317b690db3$export$9d829cdfbbd34b71 = (contractAddress, tokenId)=>{
+    const [contract] = (0, $6a4fc3770554f563$export$5556fed9e469df03)(contractAddress, $9ac683317b690db3$var$abi);
+    const [state, setState] = (0, $adHgb$react.useState)({
+        isLoading: false
+    });
+    (0, $adHgb$react.useEffect)(()=>{
+        const fetchMetadata = async ()=>{
+            setState((prevState)=>({
+                    ...prevState,
+                    error: undefined,
+                    isLoading: true
+                }));
+            try {
+                let metadata;
+                const tokenUri = await contract.tokenURI(tokenId);
+                const base64Data = $9ac683317b690db3$var$asDataUrl(tokenUri);
+                if (base64Data) metadata = JSON.parse(atob(base64Data));
+                else {
+                    const response = await fetch(tokenUri);
+                    if (!response.ok) throw new Error(`Network response was not OK, status: ${response.status}`);
+                    metadata = await response.json();
+                }
+                setState((prevState)=>({
+                        ...prevState,
+                        isLoading: false,
+                        metadata: metadata
+                    }));
+            } catch (error) {
+                setState((prevState)=>({
+                        ...prevState,
+                        error: (0, $457495504b5c2d38$export$82f46aa4e6535a45)(error),
+                        isLoading: false
+                    }));
+            }
+        };
+        fetchMetadata();
+    }, [
+        contract,
+        tokenId
+    ]);
+    return state;
+};
+
+
+$parcel$exportWildcard($1677d79a02accae2$exports, $9ac683317b690db3$exports);
+
+
 var $b8f97f93e1823d67$exports = {};
 var $28679e69c1e5eac7$exports = {};
 
@@ -396,38 +527,49 @@ $parcel$export($28679e69c1e5eac7$exports, "useWalletBalance", () => $28679e69c1e
 
 
 
-
-const $28679e69c1e5eac7$export$512f6b8a30d065e1 = (address)=>{
+const $28679e69c1e5eac7$export$512f6b8a30d065e1 = (address, { refreshOnBlock: refreshOnBlock  } = {})=>{
     const [state, setState] = (0, $adHgb$react.useState)({
-        balance: (0, $adHgb$ethers.BigNumber).from(0),
         isLoading: false
     });
     const provider = (0, $9f2efcd9dd9f4089$export$693cdb10cec23617)();
-    (0, $adHgb$react.useEffect)(()=>{
-        (async function fetchBalance() {
+    const fetchBalance = (0, $adHgb$react.useCallback)(async ()=>{
+        setState((prevState)=>({
+                ...prevState,
+                isLoading: true,
+                error: undefined
+            }));
+        try {
+            const balance = await provider.getBalance(address);
             setState((prevState)=>({
                     ...prevState,
-                    isLoading: true,
-                    error: undefined
+                    balance: balance,
+                    isLoading: false
                 }));
-            try {
-                const balance = await provider.getBalance(address);
-                setState((prevState)=>({
-                        ...prevState,
-                        balance: balance,
-                        isLoading: false
-                    }));
-            } catch (err) {
-                setState((prevState)=>({
-                        ...prevState,
-                        isLoading: false,
-                        error: (0, $457495504b5c2d38$export$82f46aa4e6535a45)(err)
-                    }));
-            }
-        })();
+        } catch (err) {
+            setState((prevState)=>({
+                    ...prevState,
+                    isLoading: false,
+                    error: (0, $457495504b5c2d38$export$82f46aa4e6535a45)(err)
+                }));
+        }
     }, [
         address,
         provider
+    ]);
+    (0, $adHgb$react.useEffect)(()=>{
+        fetchBalance();
+    }, [
+        fetchBalance
+    ]);
+    (0, $adHgb$react.useEffect)(()=>{
+        if (refreshOnBlock) provider.on("block", fetchBalance);
+        return ()=>{
+            if (refreshOnBlock) provider.off("block", fetchBalance);
+        };
+    }, [
+        provider,
+        fetchBalance,
+        refreshOnBlock
     ]);
     return state;
 };
@@ -436,18 +578,25 @@ const $28679e69c1e5eac7$export$512f6b8a30d065e1 = (address)=>{
 $parcel$exportWildcard($b8f97f93e1823d67$exports, $28679e69c1e5eac7$exports);
 
 
-$parcel$exportWildcard($c0c07659166c9de8$exports, $6aa5989b47ada426$exports);
-$parcel$exportWildcard($c0c07659166c9de8$exports, $f0647d1c2a263569$exports);
 $parcel$exportWildcard($c0c07659166c9de8$exports, $56a135bc917291c1$exports);
-$parcel$exportWildcard($c0c07659166c9de8$exports, $51ed8dc16fdb6b1e$exports);
+$parcel$exportWildcard($c0c07659166c9de8$exports, $ef7d49319f2771db$exports);
+$parcel$exportWildcard($c0c07659166c9de8$exports, $c5eded837e2f2da8$exports);
+$parcel$exportWildcard($c0c07659166c9de8$exports, $6aa5989b47ada426$exports);
 $parcel$exportWildcard($c0c07659166c9de8$exports, $ff0d9ec41c5160b1$exports);
+$parcel$exportWildcard($c0c07659166c9de8$exports, $fc0409aadd1d83d2$exports);
+$parcel$exportWildcard($c0c07659166c9de8$exports, $f0647d1c2a263569$exports);
 $parcel$exportWildcard($c0c07659166c9de8$exports, $b8f97f93e1823d67$exports);
+$parcel$exportWildcard($c0c07659166c9de8$exports, $1677d79a02accae2$exports);
 
+
+
+var $7476bb2f3e99131c$exports = {};
 
 
 $parcel$exportWildcard(module.exports, $f4f77e0c5912504a$exports);
 $parcel$exportWildcard(module.exports, $c0c07659166c9de8$exports);
 $parcel$exportWildcard(module.exports, $b074651bcad67e82$exports);
+$parcel$exportWildcard(module.exports, $7476bb2f3e99131c$exports);
 
 
 //# sourceMappingURL=index.js.map
