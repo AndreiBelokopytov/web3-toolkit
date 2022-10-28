@@ -1,33 +1,21 @@
-import { Contract, ContractInterface, providers, Signer } from 'ethers';
-import { useRef } from 'react';
-import { isMetaMaskInstalled, metaMask } from '../../walletApi';
+import { Contract, ContractInterface } from 'ethers';
+import { useCallback, useState } from 'react';
 import { useProvider } from '../useProvider';
+import { useSigner } from '../useSigner';
 
-const defaultSigner: Signer | undefined = (() => {
-  if (isMetaMaskInstalled(metaMask)) {
-    return new providers.Web3Provider(metaMask).getSigner();
-  }
-  return undefined;
-})();
-
-export const useContract = (address: string, abi: ContractInterface) => {
-  const provider = useProvider();
-  const contract = useRef(new Contract(address, abi, provider)).current;
-  return contract;
-};
-
-export const useWritableContract = (
+export const useContract = (
   address: string,
-  abi: ContractInterface,
-  signer: Signer | undefined
-) => {
-  if (!signer && !defaultSigner) {
-    throw new Error(
-      'Can not init writable contract because no signer provided and MetaMask is not installed'
-    );
-  }
-  const contract = useRef(
-    new Contract(address, abi, signer ?? defaultSigner)
-  ).current;
-  return contract;
+  abi: ContractInterface
+): [contract: Contract, connect: () => void] => {
+  const signer = useSigner();
+  const provider = useProvider();
+  const [contract, setContract] = useState(
+    new Contract(address, abi, provider)
+  );
+  const connect = useCallback(() => {
+    if (signer) {
+      setContract(contract.connect(signer));
+    }
+  }, [contract, signer]);
+  return [contract, connect];
 };

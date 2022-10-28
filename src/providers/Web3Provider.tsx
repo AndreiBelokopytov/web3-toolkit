@@ -1,4 +1,4 @@
-import { getDefaultProvider } from 'ethers';
+import { getDefaultProvider, Signer } from 'ethers';
 import React, { createContext, useContext, useState } from 'react';
 import { BaseProvider } from '../types';
 
@@ -15,6 +15,7 @@ export type Web3Context = {
   chainId?: string;
   chainDict: Record<string, string>;
   provider: BaseProvider;
+  signer?: Signer;
   setAddress: (address: string | undefined) => void;
   setChainId: (chainID: string | undefined) => void;
 };
@@ -29,7 +30,7 @@ const Web3Context = createContext<Web3Context>({
 });
 
 type Props = Partial<
-  Pick<Web3Context, 'address' | 'chainId' | 'provider' | 'chainDict'>
+  Pick<Web3Context, 'address' | 'chainId' | 'provider' | 'chainDict' | 'signer'>
 > & {
   children: React.ReactNode;
 };
@@ -39,6 +40,7 @@ export const Web3Provider = ({
   address: initialAddress,
   chainId: initialChainId,
   provider = defaultProvider,
+  signer,
   chainDict = {}
 }: Props) => {
   const [address, setAddress] = useState<string | undefined>(initialAddress);
@@ -50,6 +52,7 @@ export const Web3Provider = ({
     setAddress,
     setChainId,
     provider,
+    signer,
     chainDict: { ...defaultChainDict, ...chainDict }
   };
 

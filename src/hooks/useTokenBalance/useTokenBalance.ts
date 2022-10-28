@@ -24,7 +24,7 @@ export const useTokenBalance = (
   address: string,
   { refreshOnTransfer }: Options | undefined = {}
 ): TokenBalance => {
-  const contract = useContract(contractAddress, abi);
+  const [contract] = useContract(contractAddress, abi);
   const filterTransferTo = useMemo(
     () => contract.filters.Transfer(null, address),
     [contract, address]

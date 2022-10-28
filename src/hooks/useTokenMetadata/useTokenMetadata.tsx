@@ -26,7 +26,7 @@ export const useTokenMetadata = <T extends TokenMetadata>(
   contractAddress: string,
   tokenId: BigNumber
 ): TokenMetadataState<T> => {
-  const contract = useContract(contractAddress, abi);
+  const [contract] = useContract(contractAddress, abi);
 
   const [state, setState] = useState<TokenMetadataState<T>>({
     isLoading: false
