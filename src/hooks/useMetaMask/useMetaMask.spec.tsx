@@ -174,7 +174,7 @@ describe('useMetaMask', () => {
     await waitFor(() => {
       expect(status).toHaveTextContent('connected');
       expect(address).toHaveTextContent(ETH_ADDRESS);
-      expect(chainId).toHaveTextContent(parseInt(CHAIN_ID, 16));
+      expect(chainId).toHaveTextContent(parseInt(CHAIN_ID, 16).toString());
       expect(error).toBeEmptyDOMElement();
     });
   });
