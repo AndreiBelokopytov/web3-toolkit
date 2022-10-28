@@ -27,6 +27,7 @@ type Result = OnboardingState & {
   isConnecting: boolean;
   isOnboarding: boolean;
   connect: () => void;
+  disconnect: () => void;
 };
 
 export function useMetaMask(): Result {
@@ -65,7 +66,7 @@ export function useMetaMask(): Result {
   );
 
   const handleChainChanged = useCallback(
-    (chainId: string) => setChainId(chainId),
+    (chainId?: string) => setChainId(chainId),
     [setChainId]
   );
 
@@ -116,6 +117,11 @@ export function useMetaMask(): Result {
     }
   }, [handleAccountsChanded, handleChainChanged]);
 
+  const disconnect = useCallback(() => {
+    handleAccountsChanded([]);
+    handleChainChanged(undefined);
+  }, [handleAccountsChanded, handleChainChanged]);
+
   return {
     ...onboardingState,
     isNotInstalled: onboardingState.status === 'notInstalled',
@@ -123,6 +129,7 @@ export function useMetaMask(): Result {
     isConnected: onboardingState.status === 'connected',
     isConnecting: onboardingState.status === 'connecting',
     isOnboarding: onboardingState.status === 'onboarding',
-    connect
+    connect,
+    disconnect
   };
 }

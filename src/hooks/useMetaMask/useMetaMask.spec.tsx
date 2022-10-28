@@ -24,12 +24,18 @@ jest.mock('../../walletApi', () => {
 });
 
 const MetaMaskButton = () => {
-  const { status, error, connect } = useMetaMask();
+  const { status, error, connect, disconnect } = useMetaMask();
   const address = useAddress();
   const chain = useChain();
   return (
     <div>
-      <button onClick={connect}>{status}</button>
+      <button data-testid='connect' onClick={connect}>
+        Connect
+      </button>
+      <button data-testid='disconnect' onClick={disconnect}>
+        Disconnect
+      </button>
+      <div data-testid='status'>{status}</div>
       <div data-testid='address'>{address}</div>
       <div data-testid='chainId'>{chain?.id}</div>
       <div data-testid='error'>{error}</div>
@@ -42,6 +48,17 @@ const App = () => (
     <MetaMaskButton />
   </Web3Provider>
 );
+
+const getElementsToTest = () => {
+  return {
+    connectButton: screen.getByTestId('connect'),
+    disconnectButton: screen.getByTestId('disconnect'),
+    status: screen.getByTestId('status'),
+    address: screen.getByTestId('address'),
+    chainId: screen.getByTestId('chainId'),
+    error: screen.getByTestId('error')
+  };
+};
 
 describe('useMetaMask', () => {
   beforeEach(() => {
@@ -67,7 +84,11 @@ describe('useMetaMask', () => {
     //@ts-ignore
     isMetaMaskInstalled.mockReturnValue(false);
     render(<App />);
-    expect(screen.getByRole('button')).toHaveTextContent('notInstalled');
+    const { status, address, chainId, error } = getElementsToTest();
+    expect(status).toHaveTextContent('notInstalled');
+    expect(address).toBeEmptyDOMElement();
+    expect(chainId).toBeEmptyDOMElement();
+    expect(error).toBeEmptyDOMElement();
   });
 
   it('has "notConnected" state if empty account list given', async () => {
@@ -78,10 +99,14 @@ describe('useMetaMask', () => {
       return new Promise((resolve) => setTimeout(() => resolve([]), 200));
     });
     render(<App />);
-    fireEvent.click(screen.getByRole('button'));
-    await waitFor(async () => {
-      const button = await screen.getByRole('button');
-      expect(button).toHaveTextContent('notConnected');
+    const { connectButton, status, address, chainId, error } =
+      getElementsToTest();
+    fireEvent.click(connectButton);
+    await waitFor(() => {
+      expect(status).toHaveTextContent('notConnected');
+      expect(address).toBeEmptyDOMElement();
+      expect(chainId).toBeEmptyDOMElement();
+      expect(error).toBeEmptyDOMElement();
     });
   });
 
@@ -89,17 +114,25 @@ describe('useMetaMask', () => {
     //@ts-ignore
     isMetaMaskInstalled.mockReturnValue(true);
     render(<App />);
-    expect(screen.getByRole('button')).toHaveTextContent('notConnected');
+    const { status, address, chainId, error } = getElementsToTest();
+    expect(status).toHaveTextContent('notConnected');
+    expect(address).toBeEmptyDOMElement();
+    expect(chainId).toBeEmptyDOMElement();
+    expect(error).toBeEmptyDOMElement();
   });
 
   it('has "connecting" state when button clicked if MetaMask is installed', async () => {
     //@ts-ignore
     isMetaMaskInstalled.mockReturnValue(true);
     render(<App />);
-    fireEvent.click(screen.getByRole('button'));
-    await waitFor(async () => {
-      const button = await screen.getByRole('button');
-      expect(button).toHaveTextContent('connecting');
+    const { connectButton, status, address, chainId, error } =
+      getElementsToTest();
+    fireEvent.click(connectButton);
+    await waitFor(() => {
+      expect(status).toHaveTextContent('connecting');
+      expect(address).toBeEmptyDOMElement();
+      expect(chainId).toBeEmptyDOMElement();
+      expect(error).toBeEmptyDOMElement();
     });
   });
 
@@ -107,11 +140,14 @@ describe('useMetaMask', () => {
     //@ts-ignore
     isMetaMaskInstalled.mockReturnValue(false);
     render(<App />);
-    fireEvent.click(screen.getByRole('button'));
-
-    await waitFor(async () => {
-      const button = await screen.getByRole('button');
-      expect(button).toHaveTextContent('onboarding');
+    const { connectButton, status, address, chainId, error } =
+      getElementsToTest();
+    fireEvent.click(connectButton);
+    await waitFor(() => {
+      expect(status).toHaveTextContent('onboarding');
+      expect(address).toBeEmptyDOMElement();
+      expect(chainId).toBeEmptyDOMElement();
+      expect(error).toBeEmptyDOMElement();
     });
   });
 
@@ -120,12 +156,14 @@ describe('useMetaMask', () => {
     isMetaMaskInstalled.mockReturnValue(true);
     //@ts-ignore
     render(<App />);
-    fireEvent.click(screen.getByRole('button'));
-    await waitFor(async () => {
-      const button = await screen.getByRole('button');
-      expect(button).toHaveTextContent('connected');
-      expect(screen.getByTestId('address')).toHaveTextContent(ETH_ADDRESS);
-      expect(screen.getByTestId('chainId')).toHaveTextContent(CHAIN_ID);
+    const { connectButton, status, address, chainId, error } =
+      getElementsToTest();
+    fireEvent.click(connectButton);
+    await waitFor(() => {
+      expect(status).toHaveTextContent('connected');
+      expect(address).toHaveTextContent(ETH_ADDRESS);
+      expect(chainId).toHaveTextContent(CHAIN_ID);
+      expect(error).toBeEmptyDOMElement();
     });
   });
 
@@ -137,11 +175,32 @@ describe('useMetaMask', () => {
       throw new Error('Unknown error');
     });
     render(<App />);
-    fireEvent.click(screen.getByRole('button'));
+    const { connectButton, status, chainId, address, error } =
+      getElementsToTest();
+    fireEvent.click(connectButton);
     await waitFor(async () => {
-      const button = await screen.getByRole('button');
-      expect(button).toHaveTextContent('notConnected');
-      expect(screen.getByTestId('error')).not.toBeEmptyDOMElement();
+      expect(status).toHaveTextContent('notConnected');
+      expect(address).toBeEmptyDOMElement();
+      expect(chainId).toBeEmptyDOMElement();
+      expect(error).not.toBeEmptyDOMElement();
+    });
+  });
+
+  it('has "notConnected" state after disconnect', async () => {
+    //@ts-ignore
+    isMetaMaskInstalled.mockReturnValue(true);
+    render(<App />);
+    const { connectButton, disconnectButton, status, chainId, address, error } =
+      getElementsToTest();
+    fireEvent.click(connectButton);
+    setTimeout(() => {
+      fireEvent.click(disconnectButton);
+    }, 1000);
+    await waitFor(async () => {
+      expect(status).toHaveTextContent('notConnected');
+      expect(address).toBeEmptyDOMElement();
+      expect(chainId).toBeEmptyDOMElement();
+      expect(error).toBeEmptyDOMElement();
     });
   });
 });
