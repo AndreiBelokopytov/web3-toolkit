@@ -4,11 +4,11 @@ import { useMetaMask } from './useMetaMask';
 import { isMetaMaskInstalled, metaMask } from '../../walletApi';
 import '@testing-library/jest-dom/extend-expect';
 import { useAddress } from '../useAddress';
-import { useChain } from '../useChain';
+import { useNetwork } from '../useNetwork';
 import { Web3Provider } from '../../providers/Web3Provider';
 
 const ETH_ADDRESS = '0x965B7A773e3632b259108d246A7Cfdcdff118999';
-const CHAIN_ID = 'goerli';
+const CHAIN_ID = '0x1';
 
 jest.mock('../../walletApi', () => {
   return {
@@ -23,10 +23,22 @@ jest.mock('../../walletApi', () => {
   };
 });
 
+jest.mock('ethers', () => {
+  return {
+    ...jest.requireActual('ethers'),
+    providers: {
+      getNetwork: () => ({
+        name: 'goerli',
+        chainId: 1
+      })
+    }
+  };
+});
+
 const MetaMaskButton = () => {
   const { status, error, connect, disconnect } = useMetaMask();
   const address = useAddress();
-  const chain = useChain();
+  const network = useNetwork();
   return (
     <div>
       <button data-testid='connect' onClick={connect}>
@@ -37,7 +49,7 @@ const MetaMaskButton = () => {
       </button>
       <div data-testid='status'>{status}</div>
       <div data-testid='address'>{address}</div>
-      <div data-testid='chainId'>{chain?.id}</div>
+      <div data-testid='chainId'>{network?.chainId}</div>
       <div data-testid='error'>{error}</div>
     </div>
   );
@@ -162,7 +174,7 @@ describe('useMetaMask', () => {
     await waitFor(() => {
       expect(status).toHaveTextContent('connected');
       expect(address).toHaveTextContent(ETH_ADDRESS);
-      expect(chainId).toHaveTextContent(CHAIN_ID);
+      expect(chainId).toHaveTextContent(parseInt(CHAIN_ID, 16));
       expect(error).toBeEmptyDOMElement();
     });
   });

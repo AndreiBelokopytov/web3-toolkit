@@ -1,5 +1,5 @@
 export * from './useAddress';
-export * from './useChain';
+export * from './useNetwork';
 export * from './useContract';
 export * from './useMetaMask';
 export * from './useProvider';
