@@ -17,7 +17,10 @@ type TokenBalance = State & {
   refresh: () => void;
 };
 
-const abi = ['function balanceOf(address owner) view returns (uint256)'];
+const abi = [
+  'function balanceOf(address owner) view returns (uint256)',
+  'event Transfer(address indexed from, address indexed to, uint256 value)'
+];
 
 export const useTokenBalance = (
   contractAddress: string,
