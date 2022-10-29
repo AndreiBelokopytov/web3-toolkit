@@ -384,7 +384,8 @@ $parcel$export($9cfbd30380651811$exports, "useTokenBalance", () => $9cfbd3038065
 
 
 const $9cfbd30380651811$var$abi = [
-    "function balanceOf(address owner) view returns (uint256)"
+    "function balanceOf(address owner) view returns (uint256)",
+    "event Transfer(address indexed from, address indexed to, uint256 value)"
 ];
 const $9cfbd30380651811$export$c79c82fb94eb75b4 = (contractAddress, address, { refreshOnTransfer: refreshOnTransfer  } = {})=>{
     const [contract] = (0, $353c4fd9c23dc190$export$5556fed9e469df03)(contractAddress, $9cfbd30380651811$var$abi);
@@ -582,8 +583,8 @@ $parcel$exportWildcard($5700acf22cb6391e$exports, $fb44dc37b7573206$exports);
 $parcel$exportWildcard($5700acf22cb6391e$exports, $919486e51744d371$exports);
 $parcel$exportWildcard($5700acf22cb6391e$exports, $bc79a488b049a0e2$exports);
 $parcel$exportWildcard($5700acf22cb6391e$exports, $80d717538ad2e1e9$exports);
-$parcel$exportWildcard($5700acf22cb6391e$exports, $049ac9de6abc74c7$exports);
 $parcel$exportWildcard($5700acf22cb6391e$exports, $3aafae72fb40ba94$exports);
+$parcel$exportWildcard($5700acf22cb6391e$exports, $049ac9de6abc74c7$exports);
 
 
 
@@ -592,5 +593,5 @@ var $fd4e7a97551fe0f5$exports = {};
 
 
 
-export {$46ace6a8ad08831d$export$73974d1f547d9d48 as Address, $c8c6171bf842faa5$export$276e99f8b64146b2 as Balance, $1291230e517cb182$export$ac0686965540f22d as useAddress, $6e87fadcbd56498c$export$553aaf59afc1a2d8 as useNetwork, $353c4fd9c23dc190$export$5556fed9e469df03 as useContract, $55abee8d73d3bb4a$export$6f1a648d65fc54a1 as useMetaMask, $4c518f06881b3c31$export$ff1cd117057bac38 as OnboardingState, $7c49c323774941e5$export$693cdb10cec23617 as useProvider, $9e97004f6662087d$export$9a227db3d64f1ffd as useSigner, $9cfbd30380651811$export$c79c82fb94eb75b4 as useTokenBalance, $6f864d5f96b5a0b3$export$512f6b8a30d065e1 as useWalletBalance, $6eb90ea1e4e9ef36$export$9d829cdfbbd34b71 as useTokenMetadata, $b5bf33355828ad95$export$d05096c9fd9d936d as Web3Provider, $b5bf33355828ad95$export$5d39cdc6a2aceb53 as useWeb3};
+export {$46ace6a8ad08831d$export$73974d1f547d9d48 as Address, $c8c6171bf842faa5$export$276e99f8b64146b2 as Balance, $1291230e517cb182$export$ac0686965540f22d as useAddress, $6e87fadcbd56498c$export$553aaf59afc1a2d8 as useNetwork, $353c4fd9c23dc190$export$5556fed9e469df03 as useContract, $55abee8d73d3bb4a$export$6f1a648d65fc54a1 as useMetaMask, $4c518f06881b3c31$export$ff1cd117057bac38 as OnboardingState, $7c49c323774941e5$export$693cdb10cec23617 as useProvider, $9e97004f6662087d$export$9a227db3d64f1ffd as useSigner, $9cfbd30380651811$export$c79c82fb94eb75b4 as useTokenBalance, $6eb90ea1e4e9ef36$export$9d829cdfbbd34b71 as useTokenMetadata, $6f864d5f96b5a0b3$export$512f6b8a30d065e1 as useWalletBalance, $b5bf33355828ad95$export$d05096c9fd9d936d as Web3Provider, $b5bf33355828ad95$export$5d39cdc6a2aceb53 as useWeb3};
 //# sourceMappingURL=module.js.map

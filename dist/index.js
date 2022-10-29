@@ -387,7 +387,8 @@ $parcel$export($88f989a8bd357839$exports, "useTokenBalance", () => $88f989a8bd35
 
 
 const $88f989a8bd357839$var$abi = [
-    "function balanceOf(address owner) view returns (uint256)"
+    "function balanceOf(address owner) view returns (uint256)",
+    "event Transfer(address indexed from, address indexed to, uint256 value)"
 ];
 const $88f989a8bd357839$export$c79c82fb94eb75b4 = (contractAddress, address, { refreshOnTransfer: refreshOnTransfer  } = {})=>{
     const [contract] = (0, $6a4fc3770554f563$export$5556fed9e469df03)(contractAddress, $88f989a8bd357839$var$abi);
@@ -585,8 +586,8 @@ $parcel$exportWildcard($c0c07659166c9de8$exports, $6aa5989b47ada426$exports);
 $parcel$exportWildcard($c0c07659166c9de8$exports, $ff0d9ec41c5160b1$exports);
 $parcel$exportWildcard($c0c07659166c9de8$exports, $fc0409aadd1d83d2$exports);
 $parcel$exportWildcard($c0c07659166c9de8$exports, $f0647d1c2a263569$exports);
-$parcel$exportWildcard($c0c07659166c9de8$exports, $b8f97f93e1823d67$exports);
 $parcel$exportWildcard($c0c07659166c9de8$exports, $1677d79a02accae2$exports);
+$parcel$exportWildcard($c0c07659166c9de8$exports, $b8f97f93e1823d67$exports);
 
 
 
