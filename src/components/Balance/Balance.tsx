@@ -15,7 +15,7 @@ export const Balance = memo(
   ({ value, units = DEFAULT_UNITS, fractionDigits }: Props) => {
     assert(
       fractionDigits === undefined ||
-        (fractionDigits >= 0 && fractionDigits < units),
+        (fractionDigits >= 0 && fractionDigits <= units),
       'invalid value for the "fractionDigits" attribute'
     );
     let formattedValue = formatUnits(value, units);
