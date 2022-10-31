@@ -76,17 +76,19 @@ describe('useTokenMetadata', () => {
   it('returns no metadata when loading', async () => {
     render(<App />);
     const [name, description, image, loading, error] = getElementsToTest();
-    expect(loading).not.toBeEmptyDOMElement();
-    expect(name).toBeEmptyDOMElement();
-    expect(description).toBeEmptyDOMElement();
-    expect(image).toBeEmptyDOMElement();
-    expect(error).toBeEmptyDOMElement();
+    await waitFor(() => {
+      expect(loading).not.toBeEmptyDOMElement();
+      expect(name).toBeEmptyDOMElement();
+      expect(description).toBeEmptyDOMElement();
+      expect(image).toBeEmptyDOMElement();
+      expect(error).toBeEmptyDOMElement();
+    });
   });
 
   it('returns token metadata when loading is finished if tokenURI is HTTP URL', async () => {
     render(<App />);
+    const [name, description, image, loading, error] = getElementsToTest();
     await waitFor(async () => {
-      const [name, description, image, loading, error] = getElementsToTest();
       expect(loading).toBeEmptyDOMElement();
       expect(name).toHaveTextContent(METADATA.name);
       expect(description).toHaveTextContent(METADATA.description);
@@ -105,8 +107,8 @@ describe('useTokenMetadata', () => {
       };
     });
     render(<App />);
+    const [name, description, image, loading, error] = getElementsToTest();
     await waitFor(async () => {
-      const [name, description, image, loading, error] = getElementsToTest();
       expect(loading).toBeEmptyDOMElement();
       expect(name).toHaveTextContent(METADATA.name);
       expect(description).toHaveTextContent(METADATA.description);
@@ -125,9 +127,9 @@ describe('useTokenMetadata', () => {
       };
     });
     render(<App />);
+    const [name, description, image, loading, error] =
+      await getElementsToTest();
     await waitFor(async () => {
-      const [name, description, image, loading, error] =
-        await getElementsToTest();
       expect(loading).toBeEmptyDOMElement();
       expect(name).toBeEmptyDOMElement();
       expect(description).toBeEmptyDOMElement();
@@ -146,9 +148,9 @@ describe('useTokenMetadata', () => {
       })
     );
     render(<App />);
+    const [name, description, image, loading, error] =
+      await getElementsToTest();
     await waitFor(async () => {
-      const [name, description, image, loading, error] =
-        await getElementsToTest();
       expect(loading).toBeEmptyDOMElement();
       expect(name).toBeEmptyDOMElement();
       expect(description).toBeEmptyDOMElement();

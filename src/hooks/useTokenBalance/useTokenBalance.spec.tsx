@@ -55,18 +55,20 @@ const getElementsToTest = () => {
 };
 
 describe('useTokenBalance', () => {
-  it('returns unefined balance initially', () => {
+  it('returns unefined balance initially', async () => {
     render(<App />);
     const [balance, loading, error] = getElementsToTest();
-    expect(balance).toBeEmptyDOMElement();
-    expect(loading).not.toBeEmptyDOMElement();
-    expect(error).toBeEmptyDOMElement();
+    await waitFor(() => {
+      expect(balance).toBeEmptyDOMElement();
+      expect(loading).not.toBeEmptyDOMElement();
+      expect(error).toBeEmptyDOMElement();
+    });
   });
 
   it('returns positive balance when loading is finished', async () => {
     render(<App />);
+    const [balance, loading, error] = getElementsToTest();
     await waitFor(async () => {
-      const [balance, loading, error] = getElementsToTest();
       expect(balance).toHaveTextContent(/^[1-9]\d*/);
       expect(loading).toBeEmptyDOMElement();
       expect(error).toBeEmptyDOMElement();
@@ -86,8 +88,8 @@ describe('useTokenBalance', () => {
       };
     });
     render(<App />);
+    const [balance, loading, error] = getElementsToTest();
     await waitFor(async () => {
-      const [balance, loading, error] = getElementsToTest();
       expect(balance).toBeEmptyDOMElement();
       expect(loading).toBeEmptyDOMElement();
       expect(error).not.toBeEmptyDOMElement();
