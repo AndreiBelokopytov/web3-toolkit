@@ -1,6 +1,7 @@
 import { getDefaultProvider, Signer } from 'ethers';
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext } from 'react';
 import { BaseProvider } from '../types';
+import { useSafeState } from '../utils';
 
 const defaultChainDict: Record<string, string> = {
   '0x1': 'Mainnet',
@@ -43,8 +44,12 @@ export const Web3Provider = ({
   signer,
   chainDict = {}
 }: Props) => {
-  const [address, setAddress] = useState<string | undefined>(initialAddress);
-  const [chainId, setChainId] = useState<string | undefined>(initialChainId);
+  const [address, setAddress] = useSafeState<string | undefined>(
+    initialAddress
+  );
+  const [chainId, setChainId] = useSafeState<string | undefined>(
+    initialChainId
+  );
 
   const context: Web3Context = {
     address,

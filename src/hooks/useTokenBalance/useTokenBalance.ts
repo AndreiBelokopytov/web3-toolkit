@@ -1,6 +1,6 @@
 import { BigNumber } from 'ethers';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { getErrorMessage } from '../../utils';
+import { useCallback, useEffect, useMemo } from 'react';
+import { getErrorMessage, useSafeState } from '../../utils';
 import { useContract } from '../useContract';
 
 type State = {
@@ -37,7 +37,7 @@ export const useTokenBalance = (
     [contract, address]
   );
 
-  const [state, setState] = useState<State>({
+  const [state, setState] = useSafeState<State>({
     isLoading: true
   });
 
@@ -61,7 +61,7 @@ export const useTokenBalance = (
         error: getErrorMessage(err)
       }));
     }
-  }, [address, contract]);
+  }, [address, contract, setState]);
 
   useEffect(() => {
     refresh();

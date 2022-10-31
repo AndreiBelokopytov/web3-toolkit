@@ -1,6 +1,6 @@
 import { BigNumber } from 'ethers';
-import { useEffect, useState } from 'react';
-import { getErrorMessage } from '../../utils';
+import { useEffect } from 'react';
+import { getErrorMessage, useSafeState } from '../../utils';
 import { useContract } from '../useContract';
 
 const abi = ['function tokenURI(uint256 tokenId) view returns (string)'];
@@ -28,7 +28,7 @@ export const useTokenMetadata = <T extends TokenMetadata>(
 ): TokenMetadataState<T> => {
   const [contract] = useContract(contractAddress, abi);
 
-  const [state, setState] = useState<TokenMetadataState<T>>({
+  const [state, setState] = useSafeState<TokenMetadataState<T>>({
     isLoading: false
   });
 
@@ -68,7 +68,7 @@ export const useTokenMetadata = <T extends TokenMetadata>(
       }
     };
     fetchMetadata();
-  }, [contract, tokenId]);
+  }, [contract, setState, tokenId]);
 
   return state;
 };

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useWeb3 } from '../../providers/Web3Provider';
 import {
   metaMask,
@@ -6,7 +6,7 @@ import {
   stopOnboarding,
   isMetaMaskInstalled
 } from '../../walletApi';
-import { getErrorMessage } from '../../utils';
+import { getErrorMessage, useSafeState } from '../../utils';
 
 export type OnBoardingStateStatus =
   | 'notInstalled'
@@ -42,7 +42,7 @@ export function useMetaMask(): Result {
       };
 
   const [onboardingState, setOnboardingState] =
-    useState<OnboardingState>(initialState);
+    useSafeState<OnboardingState>(initialState);
 
   const handleAccountsChanded = useCallback(
     (accounts: string[]) => {
@@ -62,7 +62,7 @@ export function useMetaMask(): Result {
 
       stopOnboarding();
     },
-    [setAddress]
+    [setAddress, setOnboardingState]
   );
 
   const handleChainChanged = useCallback(
@@ -115,7 +115,7 @@ export function useMetaMask(): Result {
         error: getErrorMessage(err)
       }));
     }
-  }, [handleAccountsChanded, handleChainChanged]);
+  }, [handleAccountsChanded, handleChainChanged, setOnboardingState]);
 
   const disconnect = useCallback(() => {
     handleAccountsChanded([]);

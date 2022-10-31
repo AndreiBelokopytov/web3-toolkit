@@ -1,6 +1,6 @@
 import { BigNumber } from 'ethers';
-import { useCallback, useEffect, useState } from 'react';
-import { getErrorMessage } from '../../utils';
+import { useCallback, useEffect } from 'react';
+import { getErrorMessage, useSafeState } from '../../utils';
 import { useProvider } from '../useProvider';
 
 type State = {
@@ -17,7 +17,7 @@ export const useWalletBalance = (
   address: string,
   { refreshOnBlock }: Options | undefined = {}
 ): State => {
-  const [state, setState] = useState<State>({
+  const [state, setState] = useSafeState<State>({
     isLoading: false
   });
   const provider = useProvider();
