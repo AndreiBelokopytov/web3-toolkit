@@ -3,18 +3,9 @@ import React, { createContext, useContext } from 'react';
 import { BaseProvider } from '../types';
 import { useSafeState } from '../utils';
 
-const defaultChainDict: Record<string, string> = {
-  '0x1': 'Mainnet',
-  '0x3': 'Ropsten',
-  '0x4': 'Rinkeby',
-  '0x5': 'Goerli',
-  '0x2a': 'Kovan'
-};
-
 export type Web3Context = {
   address?: string;
   chainId?: string;
-  chainDict: Record<string, string>;
   provider: BaseProvider;
   signer?: Signer;
   setAddress: (address: string | undefined) => void;
@@ -26,12 +17,11 @@ const defaultProvider = getDefaultProvider();
 const Web3Context = createContext<Web3Context>({
   setAddress: () => null,
   setChainId: () => null,
-  chainDict: defaultChainDict,
   provider: defaultProvider
 });
 
 type Props = Partial<
-  Pick<Web3Context, 'address' | 'chainId' | 'provider' | 'chainDict' | 'signer'>
+  Pick<Web3Context, 'address' | 'chainId' | 'provider' | 'signer'>
 > & {
   children: React.ReactNode;
 };
@@ -41,8 +31,7 @@ export const Web3Provider = ({
   address: initialAddress,
   chainId: initialChainId,
   provider = defaultProvider,
-  signer,
-  chainDict = {}
+  signer
 }: Props) => {
   const [address, setAddress] = useSafeState<string | undefined>(
     initialAddress
@@ -57,8 +46,7 @@ export const Web3Provider = ({
     setAddress,
     setChainId,
     provider,
-    signer,
-    chainDict: { ...defaultChainDict, ...chainDict }
+    signer
   };
 
   return (
